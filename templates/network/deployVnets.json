@@ -13,10 +13,6 @@
         {
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/virtualNetworks",
-            "copy": {
-                "name": "vnetCopy",
-                "count": "[parameters('vnet').vnetcount]"
-            },
             "name": "[concat('VN-', parameters('env'),'-', parameters('vnet').name)]",
             "location": "[resourceGroup().location]",
             "dependsOn": [],

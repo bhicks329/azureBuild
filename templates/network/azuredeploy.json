@@ -10,7 +10,7 @@
                 "PRD"
             ],
             "metadata": {
-                "description": "The code of your environment"
+                "description": "The specific environment to be deployed to"
             }
         },
         "sasToken": {
@@ -45,7 +45,7 @@
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "vnetCopy",
-                "count": "[variables('vnet')[string(copyIndex('vnetCopy'))].vnetcount]"
+                "count": "[variables('vnet').vnetcount]"
             },
             "properties": {
                 "mode": "Incremental",
