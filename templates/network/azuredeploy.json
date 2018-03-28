@@ -41,7 +41,7 @@
     "resources": [
         {
             "apiVersion": "2015-01-01",
-            "name": "[concat('linkedVnetTemplate-', string(copyIndex('')))]",
+            "name": "linkedVnetTemplate",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "vnetCopy",
