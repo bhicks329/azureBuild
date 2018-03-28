@@ -74,8 +74,7 @@
                         "name": "DMZ",
                         "network": "10.1.1.0/24"
                     }
-                },
-                "peerCount": 0
+                }
             },
             "2": {
                 "name": "TEST-1",
@@ -90,8 +89,7 @@
                         "name": "DMZ",
                         "network": "10.2.1.0/24"
                     }
-                },
-                "peerCount": 0
+                }
             }
         }
     },
