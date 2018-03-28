@@ -50,6 +50,15 @@
                         "name": "OTHER-1",
                         "network": "10.0.4.0/24"
                     }
+                },
+                "peerCount": 1,
+                "peering": {
+                    "0": {
+                        "remoteVnet": "SERVER-1",
+                        "allowVnet": "True",
+                        "allowForwarded": "True",
+                        "useRemoteGW": "False" 
+                    }
                 }
             },
             "1": {

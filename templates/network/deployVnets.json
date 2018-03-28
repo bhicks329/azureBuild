@@ -13,7 +13,8 @@
         }
     },
     "variables": {
-        "vnetName" : "[concat('VN-', parameters('env'),'-', parameters('vnet').name)]"
+        "vnetBaseName": "[concat('VN-', parameters('env'),'-')]",
+        "vnetName" : "[concat(variables('vnetBaseName'), parameters('vnet').name)]"
     },
     "resources": [
         {
@@ -52,6 +53,38 @@
             "copy": {
                 "name": "subnetCopy",
                 "count": "[parameters('vnet').subnetCount]",
+                "mode": "Serial"
+            },
+            "dependsOn": [
+                "[variables('vnetName')]"
+            ]
+        },
+        {
+            "condition": "[contains(parameters('vnet'), 'peer')]",
+            "apiVersion": "2017-05-10",
+            "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-', copyIndex(''))]", 
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('baseUrl'), 'deployPeering.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "peer": {
+                        "value": "[parameters('vnet').peer[string(copyindex(''))]]"
+                    },
+                    "remoteVnetName": {
+                        "value": "[parameters('vnet').peer[string(copyindex('').name)]]"
+                    }
+                }
+            },
+            "copy": {
+                "name": "PeerCopy",
+                "count": "[parameters('vnet').peerCount]",
                 "mode": "Serial"
             },
             "dependsOn": [
