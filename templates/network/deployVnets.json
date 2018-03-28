@@ -33,7 +33,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', variables('vnetName'), '-SN-', copyIndex(''))]",
+            "name": "[concat('lnk', '-', variables('vnetName'), '-SN-', copyIndex('subnetCopy'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -61,7 +61,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-', copyIndex(''))]",
+            "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-', copyIndex('peerCopy'))]",
             "type": "Microsoft.Resources/deployments",
             "condition": "[bool(contains(parameters('vnet'), 'peerCount'))]",
             "properties": {
