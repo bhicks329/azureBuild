@@ -32,7 +32,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('linkedSubnetTemplate', '-', variables('vnetName'), copyIndex('subnetCopy'))]",
+            "name": "[concat('linkedSubnetTemplate', '-', variables('vnetName'), copyIndex(''))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -45,14 +45,17 @@
                         "value": "[variables('vnetName')]"
                     },
                     "subnet": {
-                        "value": "[parameters('vnet').subnet[string(copyindex('subnetCopy'))]]"
+                        "value": "[parameters('vnet').subnet[string(copyindex(''))]]"
                     }
                 }
             },
             "copy": {
                 "name": "subnetCopy",
                 "count": "[parameters('vnet').subnetCount]"
-            }
+            },
+            "dependsOn": [
+                "[variables('vnetName')]"
+            ]
         }
     ]
 }

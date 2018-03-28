@@ -28,11 +28,23 @@
             "0": {
                 "name": "MGMT-1",
                 "addressSpace": "10.0.0.0/16",
-                "subnetCount": 1,
+                "subnetCount": 4,
                 "subnet": {
                     "0": {
-                        "name": "dmz",
+                        "name": "DMZ-1",
                         "network": "10.0.1.0/24"
+                    },
+                    "1": {
+                        "name": "VM-1",
+                        "network": "10.0.2.0/24"
+                    },
+                    "2": {
+                        "name": "SECURE-1",
+                        "network": "10.0.3.0/24"
+                    },
+                    "3": {
+                        "name": "OTHER-1",
+                        "network": "10.0.4.0/24"
                     }
                 }
             },
@@ -42,7 +54,7 @@
                 "subnetCount": 1,
                 "subnet": {
                     "0": {
-                        "name": "dmz",
+                        "name": "DMZ",
                         "network": "10.1.0.0/24"
                     }
                 }
