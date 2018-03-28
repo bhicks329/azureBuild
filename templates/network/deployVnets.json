@@ -14,7 +14,7 @@
     },
     "variables": {
         "vnetBaseName": "[concat('VN-', parameters('env'),'-')]",
-        "vnetName" : "[concat(variables('vnetBaseName'), parameters('vnet').name)]"
+        "vnetName": "[concat(variables('vnetBaseName'), parameters('vnet').name)]"
     },
     "resources": [
         {
@@ -33,7 +33,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', variables('vnetName'), '-SN-', copyIndex(''))]", 
+            "name": "[concat('lnk', '-', variables('vnetName'), '-SN-', copyIndex(''))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -61,7 +61,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-', copyIndex(''))]", 
+            "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-', copyIndex(''))]",
             "type": "Microsoft.Resources/deployments",
             "condition": "[contains(parameters('vnet'), 'sjdkflsdkjf')]",
             "properties": {
@@ -91,5 +91,15 @@
                 "[variables('vnetName')]"
             ]
         }
-    ]
+    ],
+    "outputs": {
+        "vnet": {
+            "type": "object",
+            "value": "[parameters('vnet')]"
+        },
+        "PeerCount": {
+            "type": "int",
+            "value": "[parameters('vnet').peerCount]"
+        }
+    }
 }
