@@ -32,7 +32,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat(variables('vnetName'), '-SN-', copyIndex(''))]",
+            "name": "[concat('lnk-', parameters('vnet').subnet[string(copyindex(''))].name ,'-', copyIndex(''))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
