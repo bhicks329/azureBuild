@@ -60,10 +60,10 @@
             ]
         },
         {
-            "condition": "[contains(parameters('vnet'), 'peering')]",
             "apiVersion": "2017-05-10",
             "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-', copyIndex(''))]", 
             "type": "Microsoft.Resources/deployments",
+            "condition": "[greater(parameters('vnet').peerCount, 0)]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
