@@ -63,7 +63,7 @@
             "apiVersion": "2017-05-10",
             "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-', copyIndex(''))]", 
             "type": "Microsoft.Resources/deployments",
-            "condition": "[contains(parameters('vnet'), 'peerCount')]",
+            "condition": "[contains(parameters('vnet'), 'sjdkflsdkjf')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
