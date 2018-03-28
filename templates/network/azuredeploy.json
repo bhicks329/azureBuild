@@ -24,7 +24,7 @@
     },
     "variables": {
         "vnet": {
-            "vnetCount": 2,
+            "vnetCount": 3,
             "0": {
                 "name": "MGMT-1",
                 "addressSpace": "10.0.0.0/16",
@@ -55,7 +55,18 @@
                 "subnet": {
                     "0": {
                         "name": "DMZ",
-                        "network": "10.1.0.0/24"
+                        "network": "10.1.1.0/24"
+                    }
+                }
+            },
+            "2": {
+                "name": "TEST-1",
+                "addressSpace": "10.2.0.0/16",
+                "subnetCount": 1,
+                "subnet": {
+                    "0": {
+                        "name": "DMZ",
+                        "network": "10.2.1.0/24"
                     }
                 }
             }

@@ -32,7 +32,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('linkedSubnetTemplate', '-', variables('vnetName'), copyIndex(''))]",
+            "name": "[concat('lnk', '-', variables('vnetName'), '-SN-', copyIndex(''))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
