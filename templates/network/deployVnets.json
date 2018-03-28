@@ -19,7 +19,7 @@
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "[concat('VN-', parameters('env'),'-', parameters('vnet').addressSpace)]"
+                        "[parameters('vnet').addressSpace]"
                     ]
                 }
             }
