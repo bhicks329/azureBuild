@@ -118,7 +118,8 @@
             },
             "copy": {
                 "name": "vnetCopy",
-                "count": "[variables('vnet').vnetCount]"
+                "count": "[variables('vnet').vnetCount]",
+                "mode": "Serial"
             }
         }
     ]
