@@ -2,20 +2,25 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vnets": {
+        "subnet": {
             "type": "object"
+        },
+        "vnetName": {
+            "type": "string"
         }
+    },
+    "variables": {
+        "subnetName": "[concat('SN-', parameters('vnetName'), '-', parameters('subnet').name)]",
+        "subnetAddress": "parameters('subnet').network)]"
     },
     "resources": [
         {
             "apiVersion": "2016-08-01",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "copy": {
-                "name": "subnetCopy",
-                "count": "[variables('vnet')[string(copyIndex('vnetCopy'))].subnets.countsubnets]"
-            },
-            "name": "[concat('SN-', variables('vnet')[string(copyIndex('vnetCopy'))].subnets[string(copyIndex('subnetCopy'))].name)]",
+            "name": "[concat(parameters('vnetName'), '/', variables('subnetName'))]",
             "properties": {
-                "addressPrefix": "[variables('vnet')[string(copyIndex('vnetCopy'))].subnets[string(copyIndex('subnetCopy'))].network]"
+                "addressPrefix": "[variables('subnetAddress')]"
             }
         }
+    ]
+}

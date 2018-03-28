@@ -24,15 +24,26 @@
     },
     "variables": {
         "vnet": {
-            "vnetcount": 1,
+            "vnetCount": 2,
             "0": {
                 "name": "MGMT-1",
                 "addressSpace": "10.0.0.0/16",
-                "subnetcount": 1,
+                "subnetCount": 1,
                 "subnet": {
                     "0": {
                         "name": "dmz",
                         "network": "10.0.1.0/24"
+                    }
+                }
+            },
+            "1": {
+                "name": "SERVER-1",
+                "addressSpace": "10.1.0.0/16",
+                "subnetCount": 1,
+                "subnet": {
+                    "0": {
+                        "name": "dmz",
+                        "network": "10.1.0.0/24"
                     }
                 }
             }
@@ -40,13 +51,9 @@
     },
     "resources": [
         {
-            "apiVersion": "2015-01-01",
-            "name": "linkedVnetTemplate",
+            "apiVersion": "2017-05-10",
+            "name": "[concat('linkedVnetTemplate', copyIndex())]",
             "type": "Microsoft.Resources/deployments",
-            "copy": {
-                "name": "vnetCopy",
-                "count": "[variables('vnet').vnetcount]"
-            },
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -59,8 +66,15 @@
                     },
                     "env": {
                         "value": "[parameters('env')]"
+                    },
+                    "baseUrl": {
+                        "value": "[parameters('baseUrl')]"
                     }
                 }
+            },
+            "copy": {
+                "name": "vnetCopy",
+                "count": "[variables('vnet').vnetCount]"
             }
         }
     ]

@@ -7,13 +7,19 @@
         },
         "env": {
             "type": "string"
+        },
+        "baseUrl": {
+            "type": "string"
         }
+    },
+    "variables": {
+        "vnetName" : "[concat('VN-', parameters('env'),'-', parameters('vnet').name)]"
     },
     "resources": [
         {
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/virtualNetworks",
-            "name": "[concat('VN-', parameters('env'),'-', parameters('vnet').name)]",
+            "name": "[variables('vnetName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
             "properties": {
@@ -22,6 +28,30 @@
                         "[parameters('vnet').addressSpace]"
                     ]
                 }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('linkedSubnetTemplate', copyIndex())]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('baseUrl'), 'deploySubnets.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "subnet": {
+                        "value": "[parameters('vnet').subnet[string(copyindex())]]"
+                    }
+                }
+            },
+            "copy": {
+                "name": "subnetCopy",
+                "count": "[parameters('vnet').subnetCount]"
             }
         }
     ]
