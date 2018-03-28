@@ -17,7 +17,7 @@
         {
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "name": "[concat(parameters('vnetName'), '/', variables('subnetName'))]",
+            "name": "[concat(parameters('vnetName'), '/', if(equals(parameters('subnet').name, 'GatewaySubnet'), 'GatewaySubnet' , variables('subnetName')))]",
             "properties": {
                 "addressPrefix": "[variables('subnetAddress')]"
             }
