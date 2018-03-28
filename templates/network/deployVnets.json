@@ -60,7 +60,7 @@
             ]
         },
         {
-            "condition": "[contains(parameters('vnet'), 'peer')]",
+            "condition": "[contains(parameters('vnet'), 'peering')]",
             "apiVersion": "2017-05-10",
             "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-', copyIndex(''))]", 
             "type": "Microsoft.Resources/deployments",
@@ -75,15 +75,15 @@
                         "value": "[variables('vnetName')]"
                     },
                     "peer": {
-                        "value": "[parameters('vnet').peer[string(copyindex(''))]]"
+                        "value": "[parameters('vnet').peering[string(copyindex(''))]]"
                     },
                     "remoteVnetName": {
-                        "value": "[parameters('vnet').peer[string(copyindex('').name)]]"
+                        "value": "[parameters('vnet').peering[string(copyindex('').name)]]"
                     }
                 }
             },
             "copy": {
-                "name": "PeerCopy",
+                "name": "peerCopy",
                 "count": "[parameters('vnet').peerCount]",
                 "mode": "Serial"
             },
