@@ -32,7 +32,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', variables('vnetName'), '-SN-', copyIndex(''))]",
+            "name": "[concat(variables('vnetName'), '-SN-', copyIndex(''))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -51,7 +51,8 @@
             },
             "copy": {
                 "name": "subnetCopy",
-                "count": "[parameters('vnet').subnetCount]"
+                "count": "[parameters('vnet').subnetCount]",
+                "mode": "Serial"
             },
             "dependsOn": [
                 "[variables('vnetName')]"
