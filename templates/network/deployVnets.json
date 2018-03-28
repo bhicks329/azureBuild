@@ -45,7 +45,7 @@
                         "value": "[variables('vnetName')]"
                     },
                     "subnet": {
-                        "value": "[parameters('vnet').subnet[string(copyindex())]]"
+                        "value": "[parameters('vnet').subnet[string(copyindex('subnetCopy'))]]"
                     }
                 }
             },
