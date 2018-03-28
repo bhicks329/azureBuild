@@ -19,7 +19,7 @@
         },
         "baseUrl": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "https://raw.githubusercontent.com/bhicks329/azureBuild/master/templates/network/"
         }
     },
     "variables": {
@@ -41,10 +41,10 @@
     "resources": [
         {
             "apiVersion": "2015-01-01",
-            "name": "linkedVnetTemplate",
+            "name": "[concat('linkedVnetTemplate-', string(copyIndex('')))]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
-                "name": "subnetCopy",
+                "name": "vnetCopy",
                 "count": "[variables('vnet')[string(copyIndex('vnetCopy'))].vnetcount]"
             },
             "properties": {
@@ -54,12 +54,14 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "vnets": {
-                        "value": "[variables('vnets')]"
+                    "vnet": {
+                        "value": "[variables('vnet')[string(copyIndex('vnetCopy'))]]"
                     },
                     "env": {
                         "value": "[parameters('env')]"
                     }
                 }
             }
-        },
+        }
+    ]
+}

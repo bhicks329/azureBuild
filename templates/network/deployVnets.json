@@ -2,8 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vnets": {
+        "vnet": {
             "type": "object"
+        },
+        "env": {
+            "type": "string"
         }
     },
     "resources": [
@@ -12,17 +15,18 @@
             "type": "Microsoft.Network/virtualNetworks",
             "copy": {
                 "name": "vnetCopy",
-                "count": "[parameters('vnetCount')]"
+                "count": "[parameters('vnet').vnetcount]"
             },
-            "name": "[concat('VN-', parameters('env'),'-', variables('vnet')[string(copyIndex())].name)]",
+            "name": "[concat('VN-', parameters('env'),'-', parameters('vnet').name)]",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "[variables('vnet')[string(copyIndex())].addressSpace]"
+                        "[concat('VN-', parameters('env'),'-', parameters('vnet').addressSpace)]"
                     ]
                 }
             }
-        },
-    }
+        }
+    ]
+}
