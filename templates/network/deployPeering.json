@@ -15,15 +15,15 @@
   "resources": [],
   "outputs": {
     "peer": {
-      "type": "object",
+      "type": "string",
       "value": "[parameters('peer')]"
     },
     "vnetName": {
-      "type": "int",
+      "type": "string",
       "value": "[parameters('vnetName')]"
     },
     "remoteVnetName": {
-      "type": "int",
+      "type": "string",
       "value": "[parameters('remoteVnetName')]"
     }
   }
