@@ -2,98 +2,50 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vnetObject": {
+        "singleVnetObject": {
             "type": "object"
-        },
-        "env": {
-            "type": "string"
         },
         "baseUrl": {
             "type": "string"
+        },
+        "nameDefaults": {
+            "type": "object"
         }
+        
     },
     "variables": {
-        "vnetBaseName": "[concat('VN-', parameters('env'),'-')]"
+        "vnetBaseName": "[parameters('nameDefaults').vnetBaseName]",
+        "vnetName": "[concat(variables('vnetBaseName'), parameters('singleVnetObject').name)]",
+        "vnetAddressSpace": "[parameters('singleVnetObject').addressSpace]"
     },
     "resources": [
         {
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/virtualNetworks",
-            "name": "[concat(variables('vnetBaseName'), parameters('vnetObject')[string(copyIndex('vnetCopy'))].name)]",
+            "name": "[variables('vnetName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "[parameters('vnetObject')[string(copyIndex('vnetCopy'))].addressSpace]"
+                        "[variables('vnetAddressSpace')]"
                     ]
+                },
+                "subnets": [           
+                    {
+                        "name": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].name]",
+                        "properties": {
+                            "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].network]"
+                        }
+                    }
+                ],
+                "copy": {
+                    "name": "subnetCopy",
+                    "count": "[parameters('singleVnetObject').subnetCount]",
+                    "mode": "Serial"
                 }
-            },
-            "copy": {
-                "name": "vnetCopy",
-                "count": "[parameters('vnetObject').vnetCount]"
             }
-        },
-        {
-            "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', parameters('vnetObject')[string(copyindex('lnksubnetCopy'))].name, '-SN-', copyIndex('lnksubnetCopy'))]",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('baseUrl'), 'deploySubnets.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vnetName": {
-                        "value": "[concat(variables('vnetBaseName'), parameters('vnetObject')[string(copyIndex('lnksubnetCopy'))].name)]"
-                    },
-                    "singleVnetObject": {
-                        "value": "[parameters('vnetObject')[string(copyindex('lnksubnetCopy'))]]"
-                    }
-                }
-            },
-            "copy": {
-                "name": "lnksubnetCopy",
-                "count": "[parameters('vnetObject').vnetCount]",
-                "mode": "Serial"
-            },
-            "dependsOn": [
-                "vnetCopy"
-            ]
-        },
-        {
-            "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', parameters('vnetObject')[string(copyindex('lnkPeerCopy'))].name, '-PEER-', copyIndex('lnkpeerCopy'))]",
-            "type": "Microsoft.Resources/deployments",
-            "condition": "[bool(contains(parameters('vnetObject')[string(copyindex('lnkPeerCopy'))], 'peerCount'))]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('baseUrl'), 'deployPeering.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vnetName": {
-                        "value": "[concat(variables('vnetBaseName'), parameters('vnetObject')[string(copyIndex('lnkPeerCopy'))].name)]"
-                    },
-                    "singleVnetObject": {
-                        "value": "[parameters('vnetObject')[string(copyindex('lnkPeerCopy'))]]"
-                    },
-                    "vnetBaseName": {
-                        "value": "[variables('vnetBaseName')]"
-                    }
-                }
-            },
-            "copy": {
-                "name": "lnkPeerCopy",
-                "count": "[parameters('vnetObject').vnetCount]",
-                "mode": "Serial"
-            },
-            "dependsOn": [
-                "vnetCopy",
-                "lnkSubnetCopy"
-            ]
         }
+        
     ]
 }
