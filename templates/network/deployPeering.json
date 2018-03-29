@@ -21,6 +21,7 @@
                 "allowVirtualNetworkAccess": "[bool(parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].allowVnet)]",
                 "allowForwardedTraffic": "[bool(parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].allowForwarded)]",
                 "useRemoteGateways": "[bool(parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].useRemoteGW)]",
+                "allowGatewayTransit": "[bool(parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].allowGatewayTransit)]",
                 "remoteVirtualNetwork": {
                     "id": "[resourceid('Microsoft.Network/virtualNetworks', concat(parameters('vnetBaseName'), parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].remoteVnet))]"
                 }

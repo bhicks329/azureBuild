@@ -1,0 +1,120 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "env": {
+            "value": "DEV"
+        },
+        "baseUrl": {
+            "value": "https://raw.githubusercontent.com/bhicks329/azureBuild/master/templates/network/"
+        },
+        "sasToken": {
+            "value": ""
+        },
+        "vnetObject": {
+            "value": {
+                "vnetCount": 3,
+                "0": {
+                    "name": "CORE-1",
+                    "addressSpace": "10.0.0.0/16",
+                    "subnetCount": 5,
+                    "subnet": {
+                        "0": {
+                            "name": "GatewaySubnet",
+                            "network": "10.0.0.0/24"
+                        },
+                        "1": {
+                            "name": "DMZ-1",
+                            "network": "10.0.1.0/24"
+                        },
+                        "2": {
+                            "name": "APP-1",
+                            "network": "10.0.2.0/24"
+                        },
+                        "3": {
+                            "name": "APPGW-1",
+                            "network": "10.0.3.0/24"
+                        },
+                        "4": {
+                            "name": "BACKEND-1",
+                            "network": "10.0.4.0/24"
+                        }
+                    },
+                    "peerCount": 2,
+                    "peering": {
+                        "0": {
+                            "remoteVnet": "SERVER-1",
+                            "allowVnet": "True",
+                            "allowForwarded": "True",
+                            "useRemoteGW": "False",
+                            "allowGatewayTransit": "True"
+                        },
+                        "1": {
+                            "remoteVnet": "TEST-1",
+                            "allowVnet": "True",
+                            "allowForwarded": "True",
+                            "useRemoteGW": "False",
+                            "allowGatewayTransit": "True"
+                        }
+                    }
+                },
+                "1": {
+                    "name": "SERVER-1",
+                    "addressSpace": "10.1.0.0/16",
+                    "subnetCount": 4,
+                    "subnet": {
+                        "0": {
+                            "name": "DMZ-1",
+                            "network": "10.1.1.0/24"
+                        },
+                        "1": {
+                            "name": "APP-1",
+                            "network": "10.1.2.0/24"
+                        },
+                        "2": {
+                            "name": "APPGW-1",
+                            "network": "10.1.3.0/24"
+                        },
+                        "3": {
+                            "name": "BACKEND-1",
+                            "network": "10.1.4.0/24"
+                        },
+                        "peerCount": 1,
+                        "peering": {
+                            "0": {
+                                "remoteVnet": "CORE-1",
+                                "allowVnet": "True",
+                                "allowForwarded": "False",
+                                "useRemoteGW": "True"
+                            }
+                        }
+                    }
+                },
+                "2": {
+                    "name": "TEST-1",
+                    "addressSpace": "10.2.0.0/16",
+                    "subnetCount": 2,
+                    "subnet": {
+                        "0": {
+                            "name": "GatewaySubnet",
+                            "network": "10.2.0.0/24"
+                        },
+                        "1": {
+                            "name": "DMZ",
+                            "network": "10.2.1.0/24"
+                        }
+                    },
+                    "peerCount": 1,
+                    "peering": {
+                        "0": {
+                            "remoteVnet": "CORE-1",
+                            "allowVnet": "True",
+                            "allowForwarded": "False",
+                            "useRemoteGW": "True"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

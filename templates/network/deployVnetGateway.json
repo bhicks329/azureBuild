@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "type": "string"
+        },
+        "gatewaySubnetName": {
+            "defaultValue": "GatewaySubnet",
+            "type": "string"
+        }
+    },
+    "variables": {
+        "gatewayName": "[concat('VNG-', parameters('vnetName'))]",
+        "pipName": "[concat(variables('gatewayName'), '-pip')]"
+    },
+    "resources": [
+        {
+            "name": "[variables('pipName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2017-10-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[variables('gatewayName')]",
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "apiVersion": "2017-10-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "id": "string",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('gatewaySubnetName'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]"
+                            }
+                        },
+                        "name": "[concat(variables('gatewayName'), '-ipconfig')]"
+                    }
+                ],
+                "gatewayType": "ExpressRoute",
+                "vpnType": "dynamic",
+                "enableBgp": false,
+                "activeActive": false,
+                "sku": {
+                    "name": "standard",
+                    "tier": "standard",
+                    "capacity": "2"
+                },
+                "vpnClientConfiguration": {
+                    "vpnClientRootCertificates": [],
+                    "vpnClientRevokedCertificates": [],
+                    "vpnClientProtocols": [
+                        "SSTP",
+                        "IkeV2"
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[variables('pipName')]"
+            ]
+        }
+    ]
+}
