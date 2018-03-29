@@ -20,15 +20,7 @@
             "properties": {
                 "allowVirtualNetworkAccess": "[bool(parameters('peer').allowVnet)]",
                 "allowForwardedTraffic": "[bool(parameters('peer').allowForwarded)]",
-                "useRemoteGateways": "[bool(parameters('peer').useRemoteGW)]",
-                "remoteVirtualNetwork": {
-                    "name": "[parameters('remoteVnetName')]"
-                },
-                "remoteAddressSpace": {
-                    "addressPrefixes": [
-                        "[reference(concat('Microsoft.Network/virtualNetworks/', parameters('remoteVnetName')), '2017-10-01').addressSpace.addressPrefixes]"
-                    ]
-                }
+                "useRemoteGateways": "[bool(parameters('peer').useRemoteGW)]"
             }
         }
     ]
