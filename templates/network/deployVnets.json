@@ -10,18 +10,19 @@
         },
         "baseUrl": {
             "type": "string"
-        }
-    },
+        },
+        "vnetName": {
+            "type": "string"
+            }
+        },
     "variables": {
-        "vnetBaseName": "[parameters('nameDefaults').vnetBaseName]",
-        "vnetName": "[concat(variables('vnetBaseName'), parameters('singleVnetObject').name)]",
         "vnetAddressSpace": "[parameters('singleVnetObject').addressSpace]",
         "copy": [
             {
                 "name": "subnets",
                 "count": "[parameters('singleVnetObject').subnetCount]",
                 "input": {
-                    "name": "[concat(if(equals(parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name, 'GatewaySubnet'), 'GatewaySubnet' , concat(variables('vnetName'), '-', parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name)))]",
+                    "name": "[concat(if(equals(parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name, 'GatewaySubnet'), 'GatewaySubnet' , concat(parameters('vnetName'), '-', parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name)))]",
                     "properties": {
                         "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].network]"
                     }
@@ -33,7 +34,7 @@
         {
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/virtualNetworks",
-            "name": "[variables('vnetName')]",
+            "name": "[parameters('vnetName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
             "properties": {

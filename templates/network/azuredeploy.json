@@ -140,6 +140,9 @@
                     },
                     "baseUrl": {
                         "value": "[parameters('baseUrl')]"
+                    },
+                    "vnetName": {
+                        "value": "[concat(variables('nameDefaults').vnetBaseName, variables('VnetObject')[string(copyIndex('lnkVnetCopy'))].name)]"
                     }
                 }
             },
