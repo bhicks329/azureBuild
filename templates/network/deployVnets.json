@@ -82,6 +82,11 @@
                     }
                 }
             },
+            "copy": {
+                "name": "peerCopy",
+                "count": "[if(contains(parameters('vnet'), 'peerCount'), parameters('vnet').peerCount, 0)]",
+                "mode": "Serial"
+            },
             "dependsOn": [
                 "[variables('vnetName')]"
             ]
