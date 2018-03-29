@@ -80,7 +80,7 @@
             "dependsOn": [
                 "lnkvnetCopy"
             ]
-        }
+        },
         
         {
             "apiVersion": "2017-05-10",
