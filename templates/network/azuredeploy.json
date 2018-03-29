@@ -23,12 +23,12 @@
         }
     },
     "variables": {
-        "vnet": {
-            "vnetCount": 1,
+        "vnetObject": {
+            "vnetCount": 3,
             "0": {
                 "name": "MGMT-1",
                 "addressSpace": "10.0.0.0/16",
-                "subnetCount": 1,
+                "subnetCount": 5,
                 "subnet": {
                     "0": {
                         "name": "GatewaySubnet",
@@ -51,10 +51,16 @@
                         "network": "10.0.4.0/24"
                     }
                 },
-                "peerCount": 1,
+                "peerCount": 2,
                 "peering": {
                     "0": {
                         "remoteVnet": "SERVER-1",
+                        "allowVnet": "True",
+                        "allowForwarded": "True",
+                        "useRemoteGW": "False" 
+                    },
+                    "1": {
+                        "remoteVnet": "TEST-1",
                         "allowVnet": "True",
                         "allowForwarded": "True",
                         "useRemoteGW": "False" 
@@ -64,7 +70,7 @@
             "1": {
                 "name": "SERVER-1",
                 "addressSpace": "10.1.0.0/16",
-                "subnetCount": 1,
+                "subnetCount": 2,
                 "subnet": {
                     "0": {
                         "name": "GatewaySubnet",
@@ -74,12 +80,21 @@
                         "name": "DMZ",
                         "network": "10.1.1.0/24"
                     }
+                },
+                "peerCount": 1,
+                "peering": {
+                    "0": {
+                        "remoteVnet": "MGMT-1",
+                        "allowVnet": "True",
+                        "allowForwarded": "True",
+                        "useRemoteGW": "False" 
+                    }
                 }
             },
             "2": {
                 "name": "TEST-1",
                 "addressSpace": "10.2.0.0/16",
-                "subnetCount": 1,
+                "subnetCount": 2,
                 "subnet": {
                     "0": {
                         "name": "GatewaySubnet",
@@ -89,6 +104,15 @@
                         "name": "DMZ",
                         "network": "10.2.1.0/24"
                     }
+                },
+                "peerCount": 1,
+                "peering": {
+                    "0": {
+                        "remoteVnet": "MGMT-1",
+                        "allowVnet": "True",
+                        "allowForwarded": "True",
+                        "useRemoteGW": "False" 
+                    }
                 }
             }
         }
@@ -96,7 +120,7 @@
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('linkedVnetTemplate', copyIndex())]",
+            "name": "[concat('lnk-', variables('vnetObject')[string(copyIndex('vnetCopy'))].name, '-', copyIndex())]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -106,7 +130,7 @@
                 },
                 "parameters": {
                     "vnet": {
-                        "value": "[variables('vnet')[string(copyIndex('vnetCopy'))]]"
+                        "value": "[variables('vnetObject')]"
                     },
                     "env": {
                         "value": "[parameters('env')]"
@@ -118,7 +142,7 @@
             },
             "copy": {
                 "name": "vnetCopy",
-                "count": "[variables('vnet').vnetCount]",
+                "count": "[variables('vnetObject').vnetCount]",
                 "mode": "Serial"
             }
         }

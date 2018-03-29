@@ -2,28 +2,30 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "peer": {
+        "singleVnetObject": {
             "type": "object"
         },
         "vnetName": {
-            "type": "string"
-        },
-        "remoteVnetName": {
             "type": "string"
         }
     },
     "resources": [
         {
-            "name": "[concat(parameters('vnetName'), '/', parameters('remoteVnetName'))]",
+            "name": "[concat(parameters('vnetName'), '/', parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].remoteVnet)]",
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
             "apiVersion": "2017-10-01",
             "properties": {
-                "allowVirtualNetworkAccess": "[bool(parameters('peer').allowVnet)]",
-                "allowForwardedTraffic": "[bool(parameters('peer').allowForwarded)]",
-                "useRemoteGateways": "[bool(parameters('peer').useRemoteGW)]",
+                "allowVirtualNetworkAccess": "[bool(parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].allowVnet)]",
+                "allowForwardedTraffic": "[bool(parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].allowForwarded)]",
+                "useRemoteGateways": "[bool(parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].useRemoteGW)]",
                 "remoteVirtualNetwork": {
-                    "id": "[resourceid('Microsoft.Network/virtualNetworks', parameters('remoteVnetName'))]"
+                    "id": "[resourceid('Microsoft.Network/virtualNetworks', parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].remoteVnet)]"
                 }
+            },
+            "copy": {
+                "name": "peerCopy",
+                "count": "[if(contains(parameters('singleVnetObject'), 'peerCount'), parameters('singleVnetObject').peerCount, 0)]",
+                "mode": "Serial"
             }
         }
     ]

@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vnet": {
+        "vnetObject": {
             "type": "object"
         },
         "env": {
@@ -13,27 +13,30 @@
         }
     },
     "variables": {
-        "vnetBaseName": "[concat('VN-', parameters('env'),'-')]",
-        "vnetName": "[concat(variables('vnetBaseName'), parameters('vnet').name)]"
+        "vnetBaseName": "[concat('VN-', parameters('env'),'-')]"
     },
     "resources": [
         {
             "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/virtualNetworks",
-            "name": "[variables('vnetName')]",
+            "name": "[concat(variables('vnetBaseName'), parameters('vnetObject')[string(copyIndex('vnetCopy'))].name)]",
             "location": "[resourceGroup().location]",
             "dependsOn": [],
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "[parameters('vnet').addressSpace]"
+                        "[parameters('vnetObject')[string(copyIndex('vnetCopy'))].addressSpace]"
                     ]
                 }
+            },
+            "copy": {
+                "name": "vnetCopy",
+                "count": "[parameters('vnetObject').vnetCount]"
             }
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', variables('vnetName'), '-SN-', copyIndex('subnetCopy'))]",
+            "name": "[concat('lnk', '-', parameters('vnetObject')[string(copyindex('lnksubnetCopy'))].name, '-SN-', copyIndex('lnksubnetCopy'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -43,27 +46,27 @@
                 },
                 "parameters": {
                     "vnetName": {
-                        "value": "[variables('vnetName')]"
+                        "value": "[concat(variables('vnetBaseName'), parameters('vnetObject')[string(copyIndex('lnksubnetCopy'))].name)]"
                     },
-                    "subnet": {
-                        "value": "[parameters('vnet').subnet[string(copyindex(''))]]"
+                    "singleVnetObject": {
+                        "value": "[parameters('vnetObject')[string(copyindex('lnksubnetCopy'))]]"
                     }
                 }
             },
             "copy": {
-                "name": "subnetCopy",
-                "count": "[parameters('vnet').subnetCount]",
+                "name": "lnksubnetCopy",
+                "count": "[parameters('vnetObject').vnetCount]",
                 "mode": "Serial"
             },
             "dependsOn": [
-                "[variables('vnetName')]"
+                "vnetCopy"
             ]
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-', copyIndex('peerCopy'))]",
+            "name": "[concat('lnk', '-', parameters('vnetObject')[string(copyindex('lnkPeerCopy'))].name, '-PEER-', copyIndex('peerCopy'))]",
             "type": "Microsoft.Resources/deployments",
-            "condition": "[bool(contains(parameters('vnet'), 'peerCount'))]",
+            "condition": "[bool(contains(parameters('vnetObject')[string(copyindex('lnkPeerCopy'))], 'peerCount'))]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -72,23 +75,21 @@
                 },
                 "parameters": {
                     "vnetName": {
-                        "value": "[variables('vnetName')]"
+                        "value": "[concat(variables('vnetBaseName'), parameters('vnetObject')[string(copyIndex('lnkPeerCopy'))].name)]"
                     },
-                    "peer": {
-                        "value": "[parameters('vnet').peering[string(copyindex(''))]]"
-                    },
-                    "remoteVnetName": {
-                        "value": "[concat(variables('vnetBaseName'), parameters('vnet').peering[string(copyindex(''))].remoteVnet)]"
+                    "singleVnetObject": {
+                        "value": "[parameters('vnetObject')[string(copyindex('lnkPeerCopy'))]]"
                     }
                 }
             },
             "copy": {
-                "name": "peerCopy",
-                "count": "[if(contains(parameters('vnet'), 'peerCount'), parameters('vnet').peerCount, 0)]",
+                "name": "lnkPeerCopy",
+                "count": "[parameters('vnetObject').vnetCount]",
                 "mode": "Serial"
             },
             "dependsOn": [
-                "[variables('vnetName')]"
+                "vnetCopy",
+                "lnkSubnetCopy"
             ]
         }
     ]

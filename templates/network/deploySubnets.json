@@ -2,24 +2,25 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "subnet": {
+        "singleVnetObject": {
             "type": "object"
         },
         "vnetName": {
             "type": "string"
         }
     },
-    "variables": {
-        "subnetName": "[concat('SN-', parameters('vnetName'), '-', parameters('subnet').name)]",
-        "subnetAddress": "[parameters('subnet').network]"
-    },
     "resources": [
         {
             "apiVersion": "2017-10-01",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "name": "[concat(parameters('vnetName'), '/', if(equals(parameters('subnet').name, 'GatewaySubnet'), 'GatewaySubnet' , variables('subnetName')))]",
+            "name": "[concat(parameters('vnetName'), '/', if(equals(parameters('singleVnetObject').subnets[string(copyIndex('subnetCopy'))].name, 'GatewaySubnet'), 'GatewaySubnet' , parameters('singleVnetObject').subnets[string(copyIndex('subnetCopy'))].name))]",
             "properties": {
-                "addressPrefix": "[variables('subnetAddress')]"
+                "addressPrefix": "[parameters('singleVnetObject').subnets[string(copyIndex('subnetCopy'))].network]"
+            },
+            "copy": {
+                "name": "subnetCopy",
+                "count": "[parameters('singleVnetObject').subnetCount]",
+                "mode": "Serial"
             }
         }
     ]
