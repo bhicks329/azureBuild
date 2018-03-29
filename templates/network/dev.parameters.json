@@ -6,7 +6,7 @@
             "value": "DEV"
         },
         "baseUrl": {
-            "value": "https://raw.githubusercontent.com/bhicks329/azureBuild/master/templates/network/"
+            "value": "https://raw.githubusercontent.com/bhicks329/azureBuild/Tidy-Up-Template/templates/network/"
         },
         "sasToken": {
             "value": ""
