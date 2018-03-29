@@ -68,12 +68,12 @@
                 },
                 "parameters": {
                     "vnetName": {
-                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('VnetObject')[string(copyIndex('lnkPeerCopy'))].name)]"
+                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('VnetObject')[string(copyIndex('lnkVngCopy'))].name)]"
                     }
                 }
             },
             "copy": {
-                "name": "lnkPeerCopy",
+                "name": "lnkVngCopy",
                 "count": "[parameters('vnetObject').vnetCount]",
                 "mode": "Serial"
             },
