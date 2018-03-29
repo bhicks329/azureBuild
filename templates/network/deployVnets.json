@@ -11,6 +11,7 @@
     },
     "variables": {
         "vnetAddressSpace": "[parameters('singleVnetObject').addressSpace]",
+        "comment" : "The copy function on this is really weird and will not verify. This is note a Mistake",
         "copy": [
             {
                 "name": "subnets",
