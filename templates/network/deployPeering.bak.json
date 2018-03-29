@@ -18,7 +18,18 @@
       "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
       "apiVersion": "2016-06-01",
       "properties": {
+        "allowVirtualNetworkAccess": "[bool(parameters('peer').allowVnet)]",
+        "allowForwardedTraffic": "[bool(parameters('peer').allowForwarded)]",
+        "useRemoteGateways": "[bool(parameters('peer').useRemoteGW)]",
+        "remoteVirtualNetwork": {
+          "id": "[resourceid('Microsoft.Network/virtualNetworks', parameters('remoteVnetName'))]"
+        },
+        "remoteAddressSpace": {
+          "addressPrefixes": [
+            "10.0.1.0/16"
+          ]
         }
+      }
     }
   ]
 }
