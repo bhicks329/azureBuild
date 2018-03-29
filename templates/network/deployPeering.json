@@ -12,13 +12,15 @@
       "type": "string"
     }
   },
-  "resources": [
-    {
-      "name": "[concat(parameters('vnetName'), '/', parameters('remoteVnetName'))]",
-      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-      "apiVersion": "2016-06-01",
-      "properties": {
-        }
+  "resources": [],
+  "outputs": {
+    "vnet": {
+      "type": "object",
+      "value": "[parameters('vnet')]"
+    },
+    "PeerCount": {
+      "type": "int",
+      "value": "[parameters('vnet').peerCount]"
     }
-  ]
+  }
 }

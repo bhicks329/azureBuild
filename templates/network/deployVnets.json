@@ -91,15 +91,5 @@
                 "[variables('vnetName')]"
             ]
         }
-    ],
-    "outputs": {
-        "vnet": {
-            "type": "object",
-            "value": "[parameters('vnet')]"
-        },
-        "PeerCount": {
-            "type": "int",
-            "value": "[parameters('vnet').peerCount]"
-        }
-    }
+    ]
 }
