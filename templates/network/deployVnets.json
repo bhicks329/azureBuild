@@ -75,10 +75,10 @@
                         "value": "[variables('vnetName')]"
                     },
                     "peer": {
-                        "value": "[parameters('vnet').peering[string(copyindex(''))]]"
+                        "value": "[parameters('vnet').peering[0]]"
                     },
                     "remoteVnetName": {
-                        "value": "[concat(variables('vnetBaseName'), parameters('vnet').peering[string(copyindex('').name)])]"
+                        "value": "[concat(variables('vnetBaseName'), parameters('vnet').peering[0].name)]"
                     }
                 }
             },
