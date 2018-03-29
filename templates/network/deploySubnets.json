@@ -13,9 +13,9 @@
         {
             "apiVersion": "2017-10-01",
             "type": "Microsoft.Network/virtualNetworks/subnets",
-            "name": "[concat(parameters('vnetName'), '/', if(equals(parameters('singleVnetObject').subnets[string(copyIndex('subnetCopy'))].name, 'GatewaySubnet'), 'GatewaySubnet' , parameters('singleVnetObject').subnets[string(copyIndex('subnetCopy'))].name))]",
+            "name": "[concat(parameters('vnetName'), '/', if(equals(parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].name, 'GatewaySubnet'), 'GatewaySubnet' , parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].name))]",
             "properties": {
-                "addressPrefix": "[parameters('singleVnetObject').subnets[string(copyIndex('subnetCopy'))].network]"
+                "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].network]"
             },
             "copy": {
                 "name": "subnetCopy",

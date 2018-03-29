@@ -120,7 +120,7 @@
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk-', variables('vnetObject')[string(copyIndex('vnetCopy'))].name, '-', copyIndex())]",
+            "name": "[concat('lnk-', variables('vnetObject')[string(copyIndex('vnetCopy'))].name, '-', copyIndex('vnetCopy'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
