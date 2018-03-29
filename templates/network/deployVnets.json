@@ -11,7 +11,6 @@
         "baseUrl": {
             "type": "string"
         }
-        
     },
     "variables": {
         "vnetBaseName": "[parameters('nameDefaults').vnetBaseName]",
@@ -19,18 +18,18 @@
         "vnetAddressSpace": "[parameters('singleVnetObject').addressSpace]",
         "subnetCopyObject": {
             "copy": [
-              {
-                "name": "subnetCopy",
-                "count": "[parameters('singleVnetObject').subnetCount]",
-                "input": {
-                    "name": "[parameters('singleVnetObject').subnet[string(copyIndex(''))].name]",
-                    "properties": {
-                        "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex(''))].network]"
+                {
+                    "name": "subnetCopy",
+                    "count": "[parameters('singleVnetObject').subnetCount]",
+                    "input": {
+                        "name": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].name]",
+                        "properties": {
+                            "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].network]"
+                        }
                     }
                 }
-              }
             ]
-          }
+        }
     },
     "resources": [
         {
@@ -45,12 +44,10 @@
                         "[variables('vnetAddressSpace')]"
                     ]
                 },
-                "subnets": [          
-                        "[variables('subnetCopyObject')]"
+                "subnets": [
+                    "[variables('subnetCopyObject')]"
                 ]
-                
             }
         }
-        
     ]
 }
