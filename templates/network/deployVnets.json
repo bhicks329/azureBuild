@@ -29,7 +29,8 @@
                     }
                 }
             ]
-        }
+        },
+        "subnetObject": "[variables('subnetCopyObject').subnets"
     },
     "resources": [
         {
@@ -45,7 +46,7 @@
                     ]
                 },
                 "subnets": [
-                    "[variables('subnetCopyObject').subnets]"
+                    "[variables('subnetObject')]"
                 ]
             }
         }
