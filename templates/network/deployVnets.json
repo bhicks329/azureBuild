@@ -64,7 +64,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', parameters('vnetObject')[string(copyindex('lnkPeerCopy'))].name, '-PEER-', copyIndex('peerCopy'))]",
+            "name": "[concat('lnk', '-', parameters('vnetObject')[string(copyindex('lnkPeerCopy'))].name, '-PEER-', copyIndex('lnkpeerCopy'))]",
             "type": "Microsoft.Resources/deployments",
             "condition": "[bool(contains(parameters('vnetObject')[string(copyindex('lnkPeerCopy'))], 'peerCount'))]",
             "properties": {

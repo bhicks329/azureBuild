@@ -129,7 +129,7 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "vnet": {
+                    "vnetObject": {
                         "value": "[variables('vnetObject')]"
                     },
                     "env": {
