@@ -20,7 +20,10 @@
             "properties": {
                 "allowVirtualNetworkAccess": "[bool(parameters('peer').allowVnet)]",
                 "allowForwardedTraffic": "[bool(parameters('peer').allowForwarded)]",
-                "useRemoteGateways": "[bool(parameters('peer').useRemoteGW)]"
+                "useRemoteGateways": "[bool(parameters('peer').useRemoteGW)]",
+                "remoteVirtualNetwork": {
+                    "id": "[resourceid('Microsoft.Network/virtualNetworks', parameters('remoteVnetName'))]"
+                }
             }
         }
     ]
