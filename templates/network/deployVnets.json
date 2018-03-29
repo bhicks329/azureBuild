@@ -22,9 +22,9 @@
                     "name": "subnetCopy",
                     "count": "[parameters('singleVnetObject').subnetCount]",
                     "input": {
-                        "name": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].name]",
+                        "name": "[parameters('singleVnetObject').subnet[string(copyIndex(''))].name]",
                         "properties": {
-                            "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].network]"
+                            "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex(''))].network]"
                         }
                     }
                 }
