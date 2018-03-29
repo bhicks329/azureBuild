@@ -61,7 +61,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', variables('vnetName'), '-PEER-' )]",
+            "name": "[concat('lnk-', variables('vnetName'), '-PEER-' )]",
             "type": "Microsoft.Resources/deployments",
             "condition": "[bool(contains(parameters('vnet'), 'peerCount'))]",
             "properties": {
@@ -72,13 +72,13 @@
                 },
                 "parameters": {
                     "vnetName": {
-                        "value": "[variables('vnetName')]"
+                        "value": "Alice"
                     },
                     "peer": {
-                        "value": "[parameters('vnet').peering[0]]"
+                        "value": "Bob"
                     },
                     "remoteVnetName": {
-                        "value": "[concat(variables('vnetBaseName'), parameters('vnet').peering[0].name)]"
+                        "value": "Jeff"
                     }
                 }
             },
