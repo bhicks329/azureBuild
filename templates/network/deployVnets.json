@@ -21,9 +21,9 @@
                 "name": "subnets",
                 "count": "[parameters('singleVnetObject').subnetCount]",
                 "input": {
-                    "name": "[if(equals(parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name, 'GatewaySubnet'), 'GatewaySubnet' , concat(variables('vnetName'), '-', parameters('singleVnetObject').subnet[string(copyIndex(''))].name))]",
+                    "name": "[if(equals(parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name, 'GatewaySubnet'), 'GatewaySubnet' , concat(variables('vnetName'), '-', parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name))]",
                     "properties": {
-                        "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex(''))].network]"
+                        "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].network]"
                     }
                 }
             }
