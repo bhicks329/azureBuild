@@ -46,14 +46,14 @@
                         "0": {
                             "remoteVnet": "SERVER-1",
                             "allowVnet": "True",
-                            "allowForwarded": "True",
+                            "allowForwarded": "False",
                             "useRemoteGW": "False",
                             "allowGatewayTransit": "True"
                         },
                         "1": {
                             "remoteVnet": "TEST-1",
                             "allowVnet": "True",
-                            "allowForwarded": "True",
+                            "allowForwarded": "False",
                             "useRemoteGW": "False",
                             "allowGatewayTransit": "True"
                         }
@@ -87,8 +87,9 @@
                         "0": {
                             "remoteVnet": "CORE-1",
                             "allowVnet": "True",
-                            "allowForwarded": "False",
-                            "useRemoteGW": "True"
+                            "allowForwarded": "True",
+                            "useRemoteGW": "True",
+                            "allowGatewayTransit": "False"
                         }
                     }
                 },
@@ -112,8 +113,9 @@
                         "0": {
                             "remoteVnet": "CORE-1",
                             "allowVnet": "True",
-                            "allowForwarded": "False",
-                            "useRemoteGW": "True"
+                            "allowForwarded": "True",
+                            "useRemoteGW": "True",
+                            "allowGatewayTransit": "False"
                         }
                     }
                 }

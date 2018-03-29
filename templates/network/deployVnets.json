@@ -7,22 +7,24 @@
         },
         "vnetName": {
             "type": "string"
-            }
-        },
+        }
+    },
     "variables": {
         "vnetAddressSpace": "[parameters('singleVnetObject').addressSpace]",
-        "copy": [
-            {
-                "name": "subnets",
-                "count": "[parameters('singleVnetObject').subnetCount]",
-                "input": {
-                    "name": "[concat(if(equals(parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name, 'GatewaySubnet'), 'GatewaySubnet' , concat(parameters('vnetName'), '-', parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name)))]",
-                    "properties": {
-                        "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].network]"
+        "subnets": {
+            "copy": [
+                {
+                    "name": "subnets",
+                    "count": "[parameters('singleVnetObject').subnetCount]",
+                    "input": {
+                        "name": "[concat(if(equals(parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name, 'GatewaySubnet'), 'GatewaySubnet' , concat(parameters('vnetName'), '-', parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].name)))]",
+                        "properties": {
+                            "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnets'))].network]"
+                        }
                     }
                 }
-            }
-        ]
+            ]
+        }
     },
     "resources": [
         {
@@ -41,5 +43,4 @@
             }
         }
     ]
-    
 }
