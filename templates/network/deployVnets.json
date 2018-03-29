@@ -31,7 +31,25 @@
             ]
         }
     },
-    "resources": [],
+    "resources": [
+        {
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('vnetName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnetAddressSpace')]"
+                    ]
+                },
+                "subnets": [
+                    "[variables('subnetCopyObject').subnetCopy]"
+                ]
+            }
+        }
+    ],
     "outputs": {
         "exampleObject": {
             "value": "[variables('subnetCopyObject')]",
