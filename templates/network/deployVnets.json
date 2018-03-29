@@ -5,12 +5,6 @@
         "singleVnetObject": {
             "type": "object"
         },
-        "nameDefaults": {
-            "type": "object"
-        },
-        "baseUrl": {
-            "type": "string"
-        },
         "vnetName": {
             "type": "string"
             }

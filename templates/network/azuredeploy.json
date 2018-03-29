@@ -57,13 +57,13 @@
                         "remoteVnet": "SERVER-1",
                         "allowVnet": "True",
                         "allowForwarded": "True",
-                        "useRemoteGW": "False" 
+                        "useRemoteGW": "False"
                     },
                     "1": {
                         "remoteVnet": "TEST-1",
                         "allowVnet": "True",
                         "allowForwarded": "True",
-                        "useRemoteGW": "False" 
+                        "useRemoteGW": "False"
                     }
                 }
             },
@@ -87,7 +87,7 @@
                         "remoteVnet": "MGMT-1",
                         "allowVnet": "True",
                         "allowForwarded": "True",
-                        "useRemoteGW": "False" 
+                        "useRemoteGW": "False"
                     }
                 }
             },
@@ -111,7 +111,7 @@
                         "remoteVnet": "MGMT-1",
                         "allowVnet": "True",
                         "allowForwarded": "True",
-                        "useRemoteGW": "False" 
+                        "useRemoteGW": "False"
                     }
                 }
             }
@@ -135,12 +135,6 @@
                     "singleVnetObject": {
                         "value": "[variables('vnetObject')[string(copyIndex('lnkVnetCopy'))]]"
                     },
-                    "nameDefaults": {
-                        "value": "[variables('nameDefaults')]"
-                    },
-                    "baseUrl": {
-                        "value": "[parameters('baseUrl')]"
-                    },
                     "vnetName": {
                         "value": "[concat(variables('nameDefaults').vnetBaseName, variables('VnetObject')[string(copyIndex('lnkVnetCopy'))].name)]"
                     }
@@ -150,6 +144,39 @@
                 "name": "lnkvnetCopy",
                 "count": "[variables('vnetObject').vnetCount]"
             }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('lnk', '-', variables('vnetObject')[string(copyindex('lnkPeerCopy'))].name, '-PEER-', copyIndex('lnkpeerCopy'))]",
+            "type": "Microsoft.Resources/deployments",
+            "condition": "[bool(contains(variables('vnetObject')[string(copyindex('lnkPeerCopy'))], 'peerCount'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('baseUrl'), 'deployPeering.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vnetName": {
+                        "value": "[concat(variables('nameDefaults').vnetBaseName, variables('VnetObject')[string(copyIndex('lnkVnetCopy'))].name)]"
+                    },
+                    "singleVnetObject": {
+                        "value": "[variables('vnetObject')[string(copyindex('lnkPeerCopy'))]]"
+                    },
+                    "vnetBaseName": {
+                        "value": "[variables('nameDefaults').vnetBaseName]"
+                    }
+                }
+            },
+            "copy": {
+                "name": "lnkPeerCopy",
+                "count": "[variables('vnetObject').vnetCount]",
+                "mode": "Serial"
+            },
+            "dependsOn": [
+                "vnetCopy",
+                "lnkSubnetCopy"
+            ]
         }
     ]
 }
