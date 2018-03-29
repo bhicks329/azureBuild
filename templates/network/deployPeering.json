@@ -7,6 +7,9 @@
         },
         "vnetName": {
             "type": "string"
+        },
+        "vnetBaseName": {
+            "type": "string"
         }
     },
     "resources": [
@@ -19,7 +22,7 @@
                 "allowForwardedTraffic": "[bool(parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].allowForwarded)]",
                 "useRemoteGateways": "[bool(parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].useRemoteGW)]",
                 "remoteVirtualNetwork": {
-                    "id": "[resourceid('Microsoft.Network/virtualNetworks', parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].remoteVnet)]"
+                    "id": "[resourceid('Microsoft.Network/virtualNetworks', concat(parameters('vnetBaseName'), parameters('singleVnetObject').peering[string(copyIndex('peerCopy'))].remoteVnet))]"
                 }
             },
             "copy": {

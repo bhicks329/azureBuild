@@ -79,6 +79,9 @@
                     },
                     "singleVnetObject": {
                         "value": "[parameters('vnetObject')[string(copyindex('lnkPeerCopy'))]]"
+                    },
+                    "vnetBaseName": {
+                        "value": "[variables('vnetBaseName')]"
                     }
                 }
             },

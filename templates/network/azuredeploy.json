@@ -120,7 +120,7 @@
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk-', variables('vnetObject')[string(copyIndex('vnetCopy'))].name, '-', copyIndex('vnetCopy'))]",
+            "name": "lnk-vnetTemplate",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -139,11 +139,6 @@
                         "value": "[parameters('baseUrl')]"
                     }
                 }
-            },
-            "copy": {
-                "name": "vnetCopy",
-                "count": "[variables('vnetObject').vnetCount]",
-                "mode": "Serial"
             }
         }
     ]
