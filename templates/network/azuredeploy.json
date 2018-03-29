@@ -115,12 +115,15 @@
                     }
                 }
             }
+        },
+        "nameDefaults": {
+            "vnetBaseName": "[concat('VN-', parameters('env'),'-')]"
         }
     },
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "lnk-vnetTemplate",
+            "name": "[concat('lnk-', variables('nameDefaults'.vnetBaseName), variables('vnetObject')[string(copyIndex('lnkVnetCopy'))].name, '-', copyIndex('lnkVnetCopy'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -129,16 +132,20 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "vnetObject": {
-                        "value": "[variables('vnetObject')]"
+                    "singleVnetObject": {
+                        "value": "[variables('vnetObject')[string(copyIndex('lnkVnetCopy'))]]"
                     },
-                    "env": {
-                        "value": "[parameters('env')]"
+                    "nameDefaults": {
+                        "value": "[variables('nameDefaults')]"
                     },
                     "baseUrl": {
                         "value": "[parameters('baseUrl')]"
                     }
                 }
+            },
+            "copy": {
+                "name": "lnkvnetCopy",
+                "count": "[variables('vnetObject').vnetCount]"
             }
         }
     ]

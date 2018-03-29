@@ -5,11 +5,11 @@
         "singleVnetObject": {
             "type": "object"
         },
-        "baseUrl": {
+        "nameDefaults": {
             "type": "string"
         },
-        "nameDefaults": {
-            "type": "object"
+        "baseUrl": {
+            "type": "string"
         }
         
     },
