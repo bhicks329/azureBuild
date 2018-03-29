@@ -16,7 +16,21 @@
     "variables": {
         "vnetBaseName": "[parameters('nameDefaults').vnetBaseName]",
         "vnetName": "[concat(variables('vnetBaseName'), parameters('singleVnetObject').name)]",
-        "vnetAddressSpace": "[parameters('singleVnetObject').addressSpace]"
+        "vnetAddressSpace": "[parameters('singleVnetObject').addressSpace]",
+        "subnetCopyArray": {
+            "copy": [
+              {
+                "name": "subnetCopy",
+                "count": "[parameters('singleVnetObject').subnetCount]",
+                "input": {
+                    "name": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].name]",
+                    "properties": {
+                        "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].network]"
+                    }
+                }
+              }
+            ]
+          }
     },
     "resources": [
         {
@@ -31,19 +45,10 @@
                         "[variables('vnetAddressSpace')]"
                     ]
                 },
-                "subnets": [           
-                    {
-                        "name": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].name]",
-                        "properties": {
-                            "addressPrefix": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].network]"
-                        }
-                    }
-                ],
-                "copy": {
-                    "name": "subnetCopy",
-                    "count": "[parameters('singleVnetObject').subnetCount]",
-                    "mode": "Serial"
-                }
+                "subnets": [          
+                        "[variables('subnetCopyArray')]"
+                ]
+                
             }
         }
         
