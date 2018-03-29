@@ -75,7 +75,7 @@
                         "value": "Alice"
                     },
                     "peer": {
-                        "value": "Bob"
+                        "value": "[parameters('vnet').peering['0']]"
                     },
                     "remoteVnetName": {
                         "value": "Jeff"

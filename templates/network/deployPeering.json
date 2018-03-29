@@ -1,30 +1,16 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "peer": {
-      "type": "string"
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "peer": {
+            "type": "object"
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "remoteVnetName": {
+            "type": "string"
+        }
     },
-    "vnetName": {
-      "type": "string"
-    },
-    "remoteVnetName": {
-      "type": "string"
-    }
-  },
-  "resources": [],
-  "outputs": {
-    "peer": {
-      "type": "string",
-      "value": "[parameters('peer')]"
-    },
-    "vnetName": {
-      "type": "string",
-      "value": "[parameters('vnetName')]"
-    },
-    "remoteVnetName": {
-      "type": "string",
-      "value": "[parameters('remoteVnetName')]"
-    }
-  }
+    "resources": []
 }

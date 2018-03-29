@@ -24,11 +24,11 @@
     },
     "variables": {
         "vnet": {
-            "vnetCount": 3,
+            "vnetCount": 1,
             "0": {
                 "name": "MGMT-1",
                 "addressSpace": "10.0.0.0/16",
-                "subnetCount": 5,
+                "subnetCount": 1,
                 "subnet": {
                     "0": {
                         "name": "GatewaySubnet",
