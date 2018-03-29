@@ -19,7 +19,7 @@
         "subnetCopyObject": {
             "copy": [
                 {
-                    "name": "subnetCopy",
+                    "name": "subnets",
                     "count": "[parameters('singleVnetObject').subnetCount]",
                     "input": {
                         "name": "[parameters('singleVnetObject').subnet[string(copyIndex('subnetCopy'))].name]",
@@ -32,6 +32,21 @@
         }
     },
     "resources": [
+        {
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('vnetName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnetAddressSpace')]"
+                    ]
+                },
+                    "[variables('subnetCopyObject')]"
+            }
+        }
     ],
     "outputs": {
         "exampleObject": {
