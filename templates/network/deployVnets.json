@@ -6,7 +6,7 @@
             "type": "object"
         },
         "nameDefaults": {
-            "type": "string"
+            "type": "object"
         },
         "baseUrl": {
             "type": "string"
