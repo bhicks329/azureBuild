@@ -6,7 +6,7 @@
             "value": "DEV"
         },
         "baseUrl": {
-            "value": "https://raw.githubusercontent.com/bhicks329/azureBuild/master/templates/network/"
+            "value": "https://raw.githubusercontent.com/bhicks329/azureBuild/Tidy-Up-Template/templates/network/"
         },
         "sasToken": {
             "value": ""
@@ -46,14 +46,14 @@
                         "0": {
                             "remoteVnet": "SERVER-1",
                             "allowVnet": "True",
-                            "allowForwarded": "True",
+                            "allowForwarded": "False",
                             "useRemoteGW": "False",
                             "allowGatewayTransit": "True"
                         },
                         "1": {
                             "remoteVnet": "TEST-1",
                             "allowVnet": "True",
-                            "allowForwarded": "True",
+                            "allowForwarded": "False",
                             "useRemoteGW": "False",
                             "allowGatewayTransit": "True"
                         }
@@ -87,8 +87,9 @@
                         "0": {
                             "remoteVnet": "CORE-1",
                             "allowVnet": "True",
-                            "allowForwarded": "False",
-                            "useRemoteGW": "True"
+                            "allowForwarded": "True",
+                            "useRemoteGW": "True",
+                            "allowGatewayTransit": "False"
                         }
                     }
                 },
@@ -112,8 +113,9 @@
                         "0": {
                             "remoteVnet": "CORE-1",
                             "allowVnet": "True",
-                            "allowForwarded": "False",
-                            "useRemoteGW": "True"
+                            "allowForwarded": "True",
+                            "useRemoteGW": "True",
+                            "allowGatewayTransit": "False"
                         }
                     }
                 }

@@ -7,10 +7,11 @@
         },
         "vnetName": {
             "type": "string"
-            }
-        },
+        }
+    },
     "variables": {
         "vnetAddressSpace": "[parameters('singleVnetObject').addressSpace]",
+        "comment" : "The copy function in this template is really weird and will not verifyin VS Code. It does work.",
         "copy": [
             {
                 "name": "subnets",
@@ -41,5 +42,4 @@
             }
         }
     ]
-    
 }
