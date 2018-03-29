@@ -14,13 +14,17 @@
   },
   "resources": [],
   "outputs": {
-    "vnet": {
+    "peer": {
       "type": "object",
-      "value": "[parameters('vnet')]"
+      "value": "[parameters('peer')]"
     },
-    "PeerCount": {
+    "vnetName": {
       "type": "int",
-      "value": "[parameters('vnet').peerCount]"
+      "value": "[parameters('vnetName')]"
+    },
+    "remoteVnetName": {
+      "type": "int",
+      "value": "[parameters('remoteVnetName')]"
     }
   }
 }
