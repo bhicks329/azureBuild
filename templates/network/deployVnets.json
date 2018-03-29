@@ -31,10 +31,11 @@
             ]
         }
     },
+    "resources": [],
     "outputs": {
         "exampleObject": {
             "value": "[variables('subnetCopyObject')]",
             "type": "object"
-          }
+        }
     }
 }
