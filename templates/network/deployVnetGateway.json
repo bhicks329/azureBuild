@@ -49,7 +49,7 @@
                     }
                 ],
                 "gatewayType": "ExpressRoute",
-                "vpnType": "dynamic",
+                "vpnType": "RouteBased",
                 "enableBgp": false,
                 "activeActive": false,
                 "sku": {

@@ -59,7 +59,7 @@
             "apiVersion": "2017-05-10",
             "name": "[concat('lnk', '-', parameters('vnetObject')[string(copyindex('lnkVngCopy'))].name, '-VNG-', copyIndex('lnkVngCopy'))]",
             "type": "Microsoft.Resources/deployments",
-            "condition": "[contains(parameters('vnetObject')[string(copyindex('lnkVngCopy'))].peering, 'allowGatewayTransit')]",
+            "condition": "[equals(parameters('vnetObject')[string(copyindex('lnkVngCopy'))].isTransit, 'True')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {

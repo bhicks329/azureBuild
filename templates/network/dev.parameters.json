@@ -41,6 +41,7 @@
                         }
                     },
                     "peerCount": 2,
+                    "isTransit": "True",
                     "peering": {
                         "0": {
                             "remoteVnet": "SERVER-1",
@@ -78,15 +79,16 @@
                         "3": {
                             "name": "BACKEND-1",
                             "network": "10.1.4.0/24"
-                        },
-                        "peerCount": 1,
-                        "peering": {
-                            "0": {
-                                "remoteVnet": "CORE-1",
-                                "allowVnet": "True",
-                                "allowForwarded": "False",
-                                "useRemoteGW": "True"
-                            }
+                        }
+                    },
+                    "peerCount": 1,
+                    "isTransit": "False",
+                    "peering": {
+                        "0": {
+                            "remoteVnet": "CORE-1",
+                            "allowVnet": "True",
+                            "allowForwarded": "False",
+                            "useRemoteGW": "True"
                         }
                     }
                 },
@@ -105,6 +107,7 @@
                         }
                     },
                     "peerCount": 1,
+                    "isTransit": "False",
                     "peering": {
                         "0": {
                             "remoteVnet": "CORE-1",
