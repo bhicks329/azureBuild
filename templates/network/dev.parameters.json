@@ -5,7 +5,7 @@
         "baseSettings": {
             "value": {
                 "env": "DEV",
-                "baseUrl": "https://raw.githubusercontent.com/bhicks329/azureBuild/Tidy-Up-Template/templates/network/",
+                "baseUrl": "https://raw.githubusercontent.com/bhicks329/azureBuild/BH/Changing-Parameter-Block/templates/network/",
                 "sasToken": ""
             }
         },

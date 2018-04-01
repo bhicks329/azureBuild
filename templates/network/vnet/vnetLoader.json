@@ -37,15 +37,10 @@
             "apiVersion": "2017-10-01",
             "type": "Microsoft.Network/virtualNetworks",
             "name": "[parameters('vnetName')]",
-            "location": "[parameters('singleVnetObject').settings[copyindex()].location]",
-            "copy": {
-                "name": "virtualNetworks",
-                "count": "[length(parameters('singleVnetObject').settings)]",
-                "mode": "Parallel"
-            },
+            "location": "[parameters('singleVnetObject').location]",
             "properties": {
                 "addressSpace": {
-                    "addressPrefixes": "[parameters('SingleVnetObject').settings[copyindex()].addressPrefixes]"
+                    "addressPrefixes": "[parameters('SingleVnetObject').addressPrefixes]"
                 },
                 "subnets": "[reference('collector').outputs.result.value]"
             }

@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "baseSettings": {
-            "type": "string"
+            "type": "object"
         },
         "vnetObject": {
             "type": "object"
@@ -11,28 +11,26 @@
     },
     "variables": {
         "nameDefaults": {
-            "networkRG": "[concat('RG-', variables('nameDefaults').vnetBaseName)]",
-            "vnetBaseName": "[concat('VN-', parameters('basesettings'.env),'-')]",
-            "subnetBaseName": "[concat(variables('nameDefaults').vnetBaseName, '-')]"
+            "vnetBaseName": "[concat('VN-', parameters('basesettings').env,'-')]"
         }
     },
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk-', variables('nameDefaults').vnetBaseName, parameters('vnetObject')[string(copyIndex('lnkVnetCopy'))].name, '-', copyIndex(''))]",
+            "name": "[concat('lnk-', variables('nameDefaults').vnetBaseName, parameters('vnetObject').settings[copyIndex()].name, '-', copyIndex())]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(parameters('baseSettings').baseUrl, 'vnetLoader.json',  parameters('baseSettings').sasToken)]",
+                    "uri": "[concat(parameters('baseSettings').baseUrl, 'vnet/vnetLoader.json',  parameters('baseSettings').sasToken)]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
                     "singleVnetObject": {
-                        "value": "[parameters('VnetObject').settings[copyIndex('')]]"
+                        "value": "[parameters('VnetObject').settings[copyIndex()]]"
                     },
                     "vnetName": {
-                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('VnetObject').settings[copyIndex('')].name)]"
+                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('VnetObject').settings[copyIndex()].name)]"
                     }
                 }
             },
