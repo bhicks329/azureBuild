@@ -7,28 +7,32 @@
         },
         "vnetName": {
             "type": "string"
+        },
+        "sasToken": {
+            "type": "securestring"
         }
     },
     "variables": {
-        "collectorTemplateUri": "[uri(deployment().properties.templateLink.uri, 'collector.json')]"
+        "subnetCollectorTemplateUri": "[concat(uri(deployment().properties.templateLink.uri, 'subnetCollector.json'), parameters('sasToken'))]",
+        "deployVNGTemplateUri": "[concat(uri(deployment().properties.templateLink.uri, 'deployVNG.json'), parameters('sasToken'))]"
     },
     "resources": [
         {
             "apiVersion": "2015-01-01",
-            "name": "collector",
+            "name": "[concat('lnk-', parameters('vnetName'), '-subnetCollector')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('collectorTemplateUri')]",
+                    "uri": "[variables('subnetCollectorTemplateUri')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
                     "source": {
-                        "value": "[parameters('singleVnetObject').subnets]"
+                        "value": "[parameters('singleVnetObject')]"
                     },
                     "transformTemplateUri": {
-                        "value": "[uri(deployment().properties.templateLink.uri, 'subnetTransform.json')]"
+                        "value": "[concat(uri(deployment().properties.templateLink.uri, 'subnetTransform.json'), parameters('sasToken'))]"
                     }
                 }
             }
@@ -36,14 +40,34 @@
         {
             "apiVersion": "2017-10-01",
             "type": "Microsoft.Network/virtualNetworks",
-            "name": "[parameters('vnetName')]",
-            "location": "[parameters('singleVnetObject').location]",
+            "name": "[toLower(parameters('vnetName'))]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": "[parameters('SingleVnetObject').addressPrefixes]"
                 },
-                "subnets": "[reference('collector').outputs.result.value]"
+                "subnets": "[reference(concat('lnk-', parameters('vnetName'), '-subnetCollector')).outputs.result.value]"
             }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('lnk', '-', parameters('singleVnetObject').name, '-vng')]",
+            "type": "Microsoft.Resources/deployments",
+            "condition": "[equals(parameters('singleVnetObject').isTransit, bool('true'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('deployVNGTemplateUri')]"
+                },
+                "parameters": {
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat('lnk-', parameters('vnetName'), '-subnetCollector')]"
+            ]
         }
     ]
 }

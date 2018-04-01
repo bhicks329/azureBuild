@@ -2,11 +2,13 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "sasToken": {
+            "value": "?sv=2017-07-29&ss=b&srt=sco&sp=rl&se=2019-04-01T18:01:28Z&st=2018-03-01T00:00:28Z&spr=https&sig=zj1cnzlR35tEdFDTlXO8R5xYuh1M%2FQRaOCU%2FxPzyU1g%3D"
+        },
         "baseSettings": {
             "value": {
-                "env": "DEV",
-                "baseUrl": "https://raw.githubusercontent.com/bhicks329/azureBuild/BH/Changing-Parameter-Block/templates/network/",
-                "sasToken": ""
+                "env": "dev",
+                "baseUrl": "https://gppvchikqjpgctemplate01.blob.core.windows.net/templates/network/"
             }
         },
         "vnetObject": {
@@ -14,7 +16,7 @@
                 "settings": [
                     {
                         "name": "core-1",
-                        "location": "westeurope",
+                        "isTransit": true,
                         "addressPrefixes": [
                             "10.0.0.0/16"
                         ],
@@ -61,7 +63,7 @@
                     },
                     {
                         "name": "server-1",
-                        "location": "westeurope",
+                        "isTransit": false,
                         "addressPrefixes": [
                             "10.1.0.0/16"
                         ],
@@ -96,7 +98,7 @@
                     },
                     {
                         "name": "test-1",
-                        "location": "westeurope",
+                        "isTransit": false,
                         "addressPrefixes": [
                             "10.2.0.0/16"
                         ],
