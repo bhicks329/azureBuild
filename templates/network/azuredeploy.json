@@ -2,24 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "env": {
-            "type": "string",
-            "defaultValue": "DEV",
-            "allowedValues": [
-                "DEV",
-                "PRD"
-            ],
-            "metadata": {
-                "description": "The specific environment to be deployed to"
-            }
-        },
-        "sasToken": {
-            "type": "securestring",
-            "defaultValue": ""
-        },
-        "baseUrl": {
-            "type": "string",
-            "defaultValue": ""
+        "baseSettings": {
+            "type": "string"
         },
         "vnetObject": {
             "type": "object"
@@ -27,93 +11,36 @@
     },
     "variables": {
         "nameDefaults": {
-            "vnetBaseName": "[concat('VN-', parameters('env'),'-')]"
+            "networkRG": "[concat('RG-', variables('nameDefaults').vnetBaseName)]",
+            "vnetBaseName": "[concat('VN-', parameters('basesettings'.env),'-')]",
+            "subnetBaseName": "[concat(variables('nameDefaults').vnetBaseName, '-')]"
         }
     },
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk-', variables('nameDefaults').vnetBaseName, parameters('vnetObject')[string(copyIndex('lnkVnetCopy'))].name, '-', copyIndex('lnkVnetCopy'))]",
+            "name": "[concat('lnk-', variables('nameDefaults').vnetBaseName, parameters('vnetObject')[string(copyIndex('lnkVnetCopy'))].name, '-', copyIndex(''))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(parameters('baseUrl'), 'deployVnets.json',  parameters('sasToken'))]",
+                    "uri": "[concat(parameters('baseSettings').baseUrl, 'vnetLoader.json',  parameters('baseSettings').sasToken)]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
                     "singleVnetObject": {
-                        "value": "[parameters('vnetObject')[string(copyIndex('lnkVnetCopy'))]]"
+                        "value": "[parameters('VnetObject').settings[copyIndex('')]]"
                     },
                     "vnetName": {
-                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('VnetObject')[string(copyIndex('lnkVnetCopy'))].name)]"
+                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('VnetObject').settings[copyIndex('')].name)]"
                     }
                 }
             },
             "copy": {
                 "name": "lnkvnetCopy",
-                "count": "[parameters('vnetObject').vnetCount]"
+                "count": "[length(parameters('vnetObject').settings)]"
             }
-        },
-        {
-            "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', parameters('vnetObject')[string(copyindex('lnkVngCopy'))].name, '-VNG-', copyIndex('lnkVngCopy'))]",
-            "type": "Microsoft.Resources/deployments",
-            "condition": "[equals(parameters('vnetObject')[string(copyindex('lnkVngCopy'))].isTransit, 'True')]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('baseUrl'), 'deployVnetGateway.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vnetName": {
-                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('VnetObject')[string(copyIndex('lnkVngCopy'))].name)]"
-                    }
-                }
-            },
-            "copy": {
-                "name": "lnkVngCopy",
-                "count": "[parameters('vnetObject').vnetCount]",
-                "mode": "Serial"
-            },
-            "dependsOn": [
-                "lnkvnetCopy"
-            ]
-        },
-        
-        {
-            "apiVersion": "2017-05-10",
-            "name": "[concat('lnk', '-', parameters('vnetObject')[string(copyindex('lnkPeerCopy'))].name, '-PEER-', copyIndex('lnkpeerCopy'))]",
-            "type": "Microsoft.Resources/deployments",
-            "condition": "[bool(contains(parameters('vnetObject')[string(copyindex('lnkPeerCopy'))], 'peerCount'))]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('baseUrl'), 'deployPeering.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vnetName": {
-                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('VnetObject')[string(copyIndex('lnkPeerCopy'))].name)]"
-                    },
-                    "singleVnetObject": {
-                        "value": "[parameters('vnetObject')[string(copyindex('lnkPeerCopy'))]]"
-                    },
-                    "vnetBaseName": {
-                        "value": "[variables('nameDefaults').vnetBaseName]"
-                    }
-                }
-            },
-            "copy": {
-                "name": "lnkPeerCopy",
-                "count": "[parameters('vnetObject').vnetCount]",
-                "mode": "Serial"
-            },
-            "dependsOn": [
-                "lnkvnetCopy",
-                "lnkVngCopy"
-            ]
         }
+
     ]
 }
