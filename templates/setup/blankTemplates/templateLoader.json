@@ -1,0 +1,34 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetObject": {
+            "type": "object"
+        }
+    },
+    "variables": {
+        "collectorTemplateUri": "[uri(deployment().properties.templateLink.uri, 'template.json')]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2015-01-01",
+            "name": "collector",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('collectorTemplateUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "source": {
+                        "value": "[parameters('vnetObject').settings]"
+                    },
+                    "transformTemplateUri": {
+                        "value": "[uri(deployment().properties.templateLink.uri, 'template.json')]"
+                    }
+                }
+            }
+        }
+    ]
+}

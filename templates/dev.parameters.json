@@ -1,0 +1,138 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sasToken": {
+            "value": "?sv=2017-07-29&ss=b&srt=sco&sp=rl&se=2019-04-01T18:01:28Z&st=2018-03-01T00:00:28Z&spr=https&sig=zj1cnzlR35tEdFDTlXO8R5xYuh1M%2FQRaOCU%2FxPzyU1g%3D"
+        },
+        "baseSettings": {
+            "value": {
+                "env": "dev",
+                "baseUrl": "https://gppvchikqjpgctemplate01.blob.core.windows.net/templates/network/"
+            }
+        },
+        "vnetObject": {
+            "value": {
+                "settings": [
+                    {
+                        "name": "core-1",
+                        "isTransit": true,
+                        "addressPrefixes": [
+                            "10.0.0.0/16"
+                        ],
+                        "subnets": [
+                            {
+                                "name": "GatewaySubnet",
+                                "addressPrefix": "10.0.0.0/24"
+                            },
+                            {
+                                "name": "dmz-1",
+                                "addressPrefix": "10.0.1.0/24"
+                            },
+                            {
+                                "name": "app-1",
+                                "addressPrefix": "10.0.2.0/24"
+                            },
+                            {
+                                "name": "mgmt-1",
+                                "addressPrefix": "10.0.3.0/24"
+                            },
+                            {
+                                "name": "backend-1",
+                                "addressPrefix": "10.0.4.0/24"
+                            }
+                        ],
+                        "virtualNetworkPeerings": [
+                            {
+                                "remoteVirtualNetwork": {
+                                    "name": "server-1"
+                                },
+                                "allowForwardedTraffic": false,
+                                "useRemoteGateways": false,
+                                "allowGatewayTransit": true
+                            },
+                            {
+                                "remoteVirtualNetwork": {
+                                    "name": "test-1"
+                                },
+                                "allowForwardedTraffic": false,
+                                "useRemoteGateways": false,
+                                "allowGatewayTransit": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "server-1",
+                        "isTransit": false,
+                        "addressPrefixes": [
+                            "10.1.0.0/16"
+                        ],
+                        "subnets": [
+                            {
+                                "name": "dmz-1",
+                                "addressPrefix": "10.1.1.0/24"
+                            },
+                            {
+                                "name": "app-1",
+                                "addressPrefix": "10.1.2.0/24"
+                            },
+                            {
+                                "name": "mgmt-1",
+                                "addressPrefix": "10.1.3.0/24"
+                            },
+                            {
+                                "name": "backend-1",
+                                "addressPrefix": "10.1.4.0/24"
+                            }
+                        ],
+                        "virtualNetworkPeerings": [
+                            {
+                                "remoteVirtualNetwork": {
+                                    "name": "core-1"
+                                },
+                                "allowForwardedTraffic": true,
+                                "useRemoteGateways": true,
+                                "allowGatewayTransit": false
+                            }
+                        ]
+                    },
+                    {
+                        "name": "test-1",
+                        "isTransit": false,
+                        "addressPrefixes": [
+                            "10.2.0.0/16"
+                        ],
+                        "subnets": [
+                            {
+                                "name": "dmz-1",
+                                "addressPrefix": "10.2.1.0/24"
+                            },
+                            {
+                                "name": "app-1",
+                                "addressPrefix": "10.2.2.0/24"
+                            },
+                            {
+                                "name": "mgmt-1",
+                                "addressPrefix": "10.2.3.0/24"
+                            },
+                            {
+                                "name": "backend-1",
+                                "addressPrefix": "10.2.4.0/24"
+                            }
+                        ],
+                        "virtualNetworkPeerings": [
+                            {
+                                "remoteVirtualNetwork": {
+                                    "name": "core-1"
+                                },
+                                "allowForwardedTraffic": true,
+                                "useRemoteGateways": true,
+                                "allowGatewayTransit": false
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

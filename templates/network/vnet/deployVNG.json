@@ -11,7 +11,7 @@
         }
     },
     "variables": {
-        "gatewayName": "[concat('VNG-', parameters('vnetName'))]",
+        "gatewayName": "[concat('vng-', parameters('vnetName'))]",
         "pipName": "[concat(variables('gatewayName'), '-pip')]"
     },
     "resources": [
