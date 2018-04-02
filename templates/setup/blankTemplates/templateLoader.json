@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vnetObject": {
-            "type": "object"
+            "type": "secureObject"
         }
     },
     "variables": {

@@ -16,7 +16,18 @@
                 "settings": [
                     {
                         "name": "core-1",
-                        "isTransit": true,
+                        "isVPNGW": true,
+                        "isERGW": false,
+                        "vpnConnections": [
+                            {
+                                "peerName": "vpnServer1",
+                                "peerAddress": "1.1.1.1",
+                                "preSharedKey": "abc123",
+                                "addressPrefixes": [
+                                    "10.254.0.0/24"
+                                ]
+                            }
+                        ],
                         "addressPrefixes": [
                             "10.0.0.0/16"
                         ],
@@ -63,9 +74,13 @@
                     },
                     {
                         "name": "server-1",
-                        "isTransit": false,
+                        "isVPNGW": false,
+                        "isERGW": false,
                         "addressPrefixes": [
                             "10.1.0.0/16"
+                        ],
+                        "vpnConnections": [
+                            {}
                         ],
                         "subnets": [
                             {
@@ -98,9 +113,13 @@
                     },
                     {
                         "name": "test-1",
-                        "isTransit": false,
+                        "isVPNGW": false,
+                        "isERGW": false,
                         "addressPrefixes": [
                             "10.2.0.0/16"
+                        ],
+                        "vpnConnections": [
+                            {}
                         ],
                         "subnets": [
                             {

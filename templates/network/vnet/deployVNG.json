@@ -5,6 +5,9 @@
         "vnetName": {
             "type": "string"
         },
+        "singleVnetObject": {
+            "type": "secureObject"
+        },
         "gatewaySubnetName": {
             "defaultValue": "GatewaySubnet",
             "type": "string"
@@ -16,7 +19,8 @@
     },
     "resources": [
         {
-            "name": "[variables('pipName')]",
+            "condition": "[equals(parameters('singleVnetObject').isVPNGW, bool('true'))]",
+            "name": "[concat(variables('pipName'), '-vpn')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2017-10-01",
             "location": "[resourceGroup().location]",
@@ -28,7 +32,8 @@
             "dependsOn": []
         },
         {
-            "name": "[variables('gatewayName')]",
+            "condition": "[equals(parameters('singleVnetObject').isVPNGW, bool('true'))]",
+            "name": "[concat(variables('gatewayName'), '-vpn')]",
             "type": "Microsoft.Network/virtualNetworkGateways",
             "apiVersion": "2017-10-01",
             "location": "[resourceGroup().location]",
@@ -42,32 +47,70 @@
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('gatewaySubnetName'))]"
                             },
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('pipName'), '-vpn'))]"
                             }
                         },
-                        "name": "[concat(variables('gatewayName'), '-ipconfig')]"
+                        "name": "[concat(variables('gatewayName'), '-vpn-ipconfig')]"
+                    }
+                ],
+                "gatewayType": "VPN",
+                "vpnType": "RouteBased",
+                "sku": {
+                    "name": "standard",
+                    "tier": "standard",
+                    "capacity": "2"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('pipName'), '-vpn')]"
+            ]
+        },
+        {
+            "condition": "[equals(parameters('singleVnetObject').isERGW, bool('true'))]",
+            "name": "[concat(variables('pipName'), '-er')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2017-10-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "condition": "[equals(parameters('singleVnetObject').isERGW, bool('true'))]",
+            "name": "[concat(variables('gatewayName'), '-er')]",
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "apiVersion": "2017-10-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "id": "string",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('gatewaySubnetName'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('pipName'), '-er'))]"
+                            }
+                        },
+                        "name": "[concat(variables('gatewayName'), '-er-ipconfig')]"
                     }
                 ],
                 "gatewayType": "ExpressRoute",
-                "vpnType": "RouteBased",
                 "enableBgp": false,
                 "activeActive": false,
                 "sku": {
                     "name": "standard",
                     "tier": "standard",
                     "capacity": "2"
-                },
-                "vpnClientConfiguration": {
-                    "vpnClientRootCertificates": [],
-                    "vpnClientRevokedCertificates": [],
-                    "vpnClientProtocols": [
-                        "SSTP",
-                        "IkeV2"
-                    ]
                 }
             },
             "dependsOn": [
-                "[variables('pipName')]"
+                "[concat(variables('pipName'), '-er')]"
             ]
         }
     ]

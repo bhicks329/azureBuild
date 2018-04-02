@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "singleVnetObject": {
-            "type": "object"
+            "type": "secureObject"
         },
         "vnetName": {
             "type": "string"
@@ -53,7 +53,7 @@
             "apiVersion": "2017-05-10",
             "name": "[concat('lnk', '-', parameters('singleVnetObject').name, '-vng')]",
             "type": "Microsoft.Resources/deployments",
-            "condition": "[equals(parameters('singleVnetObject').isTransit, bool('true'))]",
+            "condition": "[or(equals(parameters('singleVnetObject').isVPNGW, bool('true')), equals(parameters('singleVnetObject').isERGW, bool('true')))]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -62,6 +62,9 @@
                 "parameters": {
                     "vnetName": {
                         "value": "[parameters('vnetName')]"
+                    },
+                    "singleVnetObject": {
+                        "value": "[parameters('singleVnetObject')]"
                     }
                 }
             },

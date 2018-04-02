@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "singleVnetObject": {
+            "type": "secureObject"
+        },
+        "vnetName": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+          "apiVersion": "2015-05-01-preview",
+          "type": "Microsoft.Network/expressRouteCircuits",
+          "name": "[parameters('circuitName')]",
+          "location": "[resourceGroup().location]",
+          "tags": {
+            "key1": "value1",
+            "key2": "value2"
+          },
+          "sku": {
+            "name": "[concat(parameters('sku_tier'),'_', parameters('sku_family'))]",
+            "tier": "[parameters('sku_tier')]",
+            "family": "[parameters('sku_family')]"
+          },
+          "properties": {
+            "serviceProviderProperties": {
+              "serviceProviderName": "[parameters('serviceProviderName')]",
+              "peeringLocation": "[parameters('peeringLocation')]",
+              "bandwidthInMbps": "[parameters('bandwidthInMbps')]"
+            },
+            "peerings": [
+              {
+                "name": "[parameters('peeringType')]",
+                "properties": {
+                  "peeringType": "[parameters('peeringType')]",
+                  "sharedKey": "[parameters('sharedKey')]",
+                  "peerASN": "[parameters('peerASN')]",
+                  "primaryPeerAddressPrefix": "[parameters('primaryPeerAddressPrefix')]",
+                  "secondaryPeerAddressPrefix": "[parameters('secondaryPeerAddressPrefix')]",
+                  "vlanId": "[parameters('vlanId')]"
+                }
+              }
+            ]
+          }
+        }
+    ]
+}

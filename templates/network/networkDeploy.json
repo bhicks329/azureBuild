@@ -6,7 +6,7 @@
             "type": "object"
         },
         "vnetObject": {
-            "type": "object"
+            "type": "secureObject"
         },
         "sasToken": {
             "type": "securestring"
@@ -75,6 +75,34 @@
                 "count": "[length(parameters('vnetObject').settings)]",
                 "mode": "Parallel"
             }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('lnk-', variables('nameDefaults').vnetBaseName, parameters('vnetObject').settings[copyIndex()].name, '-connection-', copyIndex())]",
+            "type": "Microsoft.Resources/deployments",
+            "condition": "[equals(parameters('vnetObject').settings[copyindex()].isVPNGW, bool('true'))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('baseSettings').baseUrl, 'vnet/deployVPN.json',  parameters('sasToken'))]"
+                },
+                "parameters": {
+                    "singleVnetObject": {
+                        "value": "[parameters('vnetObject').settings[copyindex()]]"
+                    },
+                    "vnetName": {
+                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('VnetObject').settings[copyIndex()].name)]"
+                    }
+                }
+            },
+            "copy": {
+                "name": "ConnectionCopy",
+                "count": "[length(parameters('vnetObject').settings)]",
+                "mode": "Parallel"
+            },
+            "dependsOn": [
+                "lnkvnetCopy"
+            ]
         }
     ]
 }

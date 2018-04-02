@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "singleVnetObject": {
+            "type": "secureObject"
+        },
+        "vnetName": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "apiVersion": "2017-10-01",
+            "type": "Microsoft.Network/localNetworkGateways",
+            "name": "[concat('lgw-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName)]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "localNetworkAddressSpace": {
+                    "addressPrefixes": "[parameters('singleVnetObject').vpnConnections[copyindex()].addressPrefixes]"
+                },
+                "gatewayIpAddress": "[parameters('singleVnetObject').vpnConnections[copyindex()].peerAddress]"
+            },
+            "copy": {
+                "name": "localGWCopy",
+                "count": "[length(parameters('singleVnetObject').vpnConnections)]",
+                "mode": "Parallel"
+            }
+        },
+        {
+            "apiVersion": "2017-10-01",
+            "name": "[concat(parameters('vnetName'), '-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName)]",
+            "type": "Microsoft.Network/connections",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "virtualNetworkGateway1": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', concat('vng-', parameters('vnetName'), '-vpn'))]"
+                },
+                "localNetworkGateway2": {
+                    "id": "[resourceId('Microsoft.Network/localNetworkGateways', concat('lgw-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName))]"
+                },
+                "connectionType": "IPsec",
+                "routingWeight": 10,
+                "sharedKey": "[parameters('singleVnetObject').vpnConnections[copyIndex()].preSharedKey]"
+            },
+            "copy": {
+                "name": "connectionCopy",
+                "count": "[length(parameters('singleVnetObject').vpnConnections)]",
+                "mode": "Parallel"
+            }
+
+        }
+    ]
+}
