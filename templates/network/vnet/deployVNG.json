@@ -21,7 +21,7 @@
             "condition": "[greater(length(parameters('singleVnetObject').vpnConnections), 0)]",
             "name": "[concat(variables('gatewayName'), '-vpn-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2017-10-01",
+            "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "publicIPAddressVersion": "IPv4",
@@ -34,7 +34,7 @@
             "condition": "[greater(length(parameters('singleVnetObject').vpnConnections), 0)]",
             "name": "[concat(variables('gatewayName'), '-vpn')]",
             "type": "Microsoft.Network/virtualNetworkGateways",
-            "apiVersion": "2017-10-01",
+            "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "ipConfigurations": [
@@ -69,7 +69,7 @@
             "condition": "[greater(length(parameters('singleVnetObject').erConnections), 0)]",
             "name": "[concat(variables('gatewayName'), '-er-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2017-10-01",
+            "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "publicIPAddressVersion": "IPv4",
@@ -82,7 +82,7 @@
             "condition": "[greater(length(parameters('singleVnetObject').erConnections), 0)]",
             "name": "[concat(variables('gatewayName'), '-er')]",
             "type": "Microsoft.Network/virtualNetworkGateways",
-            "apiVersion": "2017-10-01",
+            "apiVersion": "2018-01-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "ipConfigurations": [
