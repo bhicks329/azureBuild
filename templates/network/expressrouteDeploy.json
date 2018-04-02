@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "baseSettings": {
+            "type": "object"
+        },
+        "networkObject": {
+            "type": "secureObject"
+        },
+        "sasToken": {
+            "type": "securestring"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "apiVersion": "2017-10-01",
+            "type": "Microsoft.Network/expressRouteCircuits",
+            "name": "[concat('er-', parameters('baseSettings').env, '-',  parameters('networkObject').expressrouteCircuits[copyindex()].name)]",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "sku": {
+                "name": "[concat(parameters('networkObject').expressrouteCircuits[copyindex()].sku.tier, '_', parameters('networkObject').expressrouteCircuits[copyindex()].sku.family)]",
+                "tier": "[parameters('networkObject').expressrouteCircuits[copyindex()].sku.tier]",
+                "family": "[parameters('networkObject').expressrouteCircuits[copyindex()].sku.family]"
+            },
+            "properties": {
+                "serviceProviderProperties": "[parameters('networkObject').expressrouteCircuits[copyindex()].serviceProviderProperties]",
+                "peerings": "[parameters('networkObject').expressrouteCircuits[copyindex()].peerings]"
+            },
+            "copy": {
+                "name": "erCopy",
+                "count": "[length(parameters('networkObject').expressrouteCircuits)]",
+                "mode": "Parallel"
+            }
+        }
+    ]
+}

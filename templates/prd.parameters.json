@@ -28,7 +28,7 @@
                         "name": "core-1",
                         "vpnConnections": [
                             {
-                                "peerName": "vpnServer1",
+                                "peerName": "plymouth-1",
                                 "peerAddress": "1.1.1.1",
                                 "preSharedKey": "abc123",
                                 "addressPrefixes": [
@@ -38,7 +38,7 @@
                         ],
                         "erConnections": [
                             {
-                                "circuit": "mainCircuit",
+                                "circuit": "main-1",
                                 "subscription": "prd"
                             }
                         ],
@@ -75,19 +75,11 @@
                                 "allowForwardedTraffic": false,
                                 "useRemoteGateways": false,
                                 "allowGatewayTransit": true
-                            },
-                            {
-                                "remoteVirtualNetwork": {
-                                    "name": "test-1"
-                                },
-                                "allowForwardedTraffic": false,
-                                "useRemoteGateways": false,
-                                "allowGatewayTransit": true
                             }
                         ]
                     },
                     {
-                        "name": "server-1",
+                        "name": "apps-1",
                         "addressPrefixes": [
                             "10.1.0.0/16"
                         ],
@@ -121,45 +113,23 @@
                                 "allowGatewayTransit": false
                             }
                         ]
-                    },
-                    {
-                        "name": "test-1",
-                        "addressPrefixes": [
-                            "10.2.0.0/16"
-                        ],
-                        "vpnConnections": [],
-                        "erConnections": [],
-                        "subnets": [
-                            {
-                                "name": "dmz-1",
-                                "addressPrefix": "10.2.1.0/24"
-                            },
-                            {
-                                "name": "app-1",
-                                "addressPrefix": "10.2.2.0/24"
-                            },
-                            {
-                                "name": "mgmt-1",
-                                "addressPrefix": "10.2.3.0/24"
-                            },
-                            {
-                                "name": "backend-1",
-                                "addressPrefix": "10.2.4.0/24"
-                            }
-                        ],
-                        "virtualNetworkPeerings": [
-                            {
-                                "remoteVirtualNetwork": {
-                                    "name": "core-1"
-                                },
-                                "allowForwardedTraffic": true,
-                                "useRemoteGateways": true,
-                                "allowGatewayTransit": false
-                            }
-                        ]
                     }
                 ],
-                "expressrouteCircuits": []
+                "expressrouteCircuits": [
+                    {
+                        "name": "main-1",
+                        "sku": {
+                            "tier": "Standard",
+                            "family": "UnlimitedData"
+                        },
+                        "serviceProviderProperties": {
+                            "serviceProviderName": "Jisc",
+                            "peeringLocation": "London",
+                            "bandwidthInMbps": "200"
+                        },
+                        "peerings": []
+                    }
+                ]
             }
         }
     }

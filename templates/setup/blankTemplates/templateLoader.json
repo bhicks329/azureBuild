@@ -2,7 +2,7 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vnetObject": {
+        "networkObject": {
             "type": "secureObject"
         }
     },
@@ -22,7 +22,7 @@
                 },
                 "parameters": {
                     "source": {
-                        "value": "[parameters('vnetObject').settings]"
+                        "value": "[parameters('networkObject').vNets]"
                     },
                     "transformTemplateUri": {
                         "value": "[uri(deployment().properties.templateLink.uri, 'template.json')]"

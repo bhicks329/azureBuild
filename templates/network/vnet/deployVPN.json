@@ -12,9 +12,9 @@
     "variables": {},
     "resources": [
         {
-            "apiVersion": "2017-10-01",
+            "apiVersion": "2018-01-01",
             "type": "Microsoft.Network/localNetworkGateways",
-            "name": "[concat('lgw-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName)]",
+            "name": "[concat('lng-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName)]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "localNetworkAddressSpace": {
@@ -29,7 +29,7 @@
             }
         },
         {
-            "apiVersion": "2017-10-01",
+            "apiVersion": "2018-01-01",
             "name": "[concat(parameters('vnetName'), '-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName)]",
             "type": "Microsoft.Network/connections",
             "location": "[resourceGroup().location]",
@@ -38,7 +38,7 @@
                     "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', concat('vng-', parameters('vnetName'), '-vpn'))]"
                 },
                 "localNetworkGateway2": {
-                    "id": "[resourceId('Microsoft.Network/localNetworkGateways', concat('lgw-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName))]"
+                    "id": "[resourceId('Microsoft.Network/localNetworkGateways', concat('lng-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName))]"
                 },
                 "connectionType": "IPsec",
                 "routingWeight": 10,
