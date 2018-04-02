@@ -7,7 +7,7 @@
         },
         "baseSettings": {
             "value": {
-                "env": "dev",
+                "env": "prd",
                 "baseUrl": "https://gppvchikqjpgctemplate01.blob.core.windows.net/templates/network/"
             }
         },
@@ -26,8 +26,6 @@
                 "vNets": [
                     {
                         "name": "core-1",
-                        "isVPNGW": true,
-                        "isERGW": false,
                         "vpnConnections": [
                             {
                                 "peerName": "vpnServer1",
@@ -90,14 +88,11 @@
                     },
                     {
                         "name": "server-1",
-                        "isVPNGW": false,
-                        "isERGW": false,
                         "addressPrefixes": [
                             "10.1.0.0/16"
                         ],
-                        "vpnConnections": [
-                            {}
-                        ],
+                        "vpnConnections": [],
+                        "erConnections": [],
                         "subnets": [
                             {
                                 "name": "dmz-1",
@@ -129,14 +124,11 @@
                     },
                     {
                         "name": "test-1",
-                        "isVPNGW": false,
-                        "isERGW": false,
                         "addressPrefixes": [
                             "10.2.0.0/16"
                         ],
-                        "vpnConnections": [
-                            {}
-                        ],
+                        "vpnConnections": [],
+                        "erConnections": [],
                         "subnets": [
                             {
                                 "name": "dmz-1",
@@ -167,21 +159,7 @@
                         ]
                     }
                 ],
-                "expressrouteCircuits": [
-                    {
-                        "name": "mainCircuit",
-                        "sku": {
-                            "tier": "Standard",
-                            "family": "UnlimitedData"
-                        },
-                        "serviceProviderProperties": {
-                            "serviceProviderName": "Jisc",
-                            "peeringLocation": "London",
-                            "bandwidthInMbps": "200"
-                        },
-                        "peerings": []
-                    }
-                ]
+                "expressrouteCircuits": []
             }
         }
     }
