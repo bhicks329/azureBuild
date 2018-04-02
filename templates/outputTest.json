@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "baseSettings": {
+            "type": "object"
+        },
+        "networkObject": {
+            "type": "secureObject"
+        },
+        "sasToken": {
+            "type": "securestring"
+        }
+    },
+    "resources": [],
+    "outputs": {
+        "output1": {
+            "type": "int",
+            "value": "[length(parameters('networkObject').vNets[int('0')].vpnConnections)]"
+        },
+        "output2": {
+            "type": "int",
+            "value": "[length(parameters('networkObject').vNets[int('1')].vpnConnections)]"
+        },
+        "output3": {
+            "type": "int",
+            "value": "[length(parameters('networkObject').vNets[int('2')].vpnConnections)]"
+        }
+    }
+}

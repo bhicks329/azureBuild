@@ -7,7 +7,7 @@
         },
         "baseSettings": {
             "value": {
-                "env": "dev",
+                "env": "prd",
                 "baseUrl": "https://gppvchikqjpgctemplate01.blob.core.windows.net/templates/network/"
             }
         },
@@ -95,9 +95,8 @@
                         "addressPrefixes": [
                             "10.1.0.0/16"
                         ],
-                        "vpnConnections": [
-                            {}
-                        ],
+                        "vpnConnections": [],
+                        "erConnections": [],
                         "subnets": [
                             {
                                 "name": "dmz-1",
@@ -134,9 +133,8 @@
                         "addressPrefixes": [
                             "10.2.0.0/16"
                         ],
-                        "vpnConnections": [
-                            {}
-                        ],
+                        "vpnConnections": [],
+                        "erConnections": [],
                         "subnets": [
                             {
                                 "name": "dmz-1",

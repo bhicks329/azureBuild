@@ -14,13 +14,12 @@
         }
     },
     "variables": {
-        "gatewayName": "[concat('vng-', parameters('vnetName'))]",
-        "pipName": "[concat(variables('gatewayName'), '-pip')]"
+        "gatewayName": "[concat('vng-', parameters('vnetName'))]"
     },
     "resources": [
         {
-            "condition": "[equals(parameters('singleVnetObject').isVPNGW, bool('true'))]",
-            "name": "[concat(variables('pipName'), '-vpn')]",
+            "condition": "[greater(length(parameters('singleVnetObject').vpnConnections), 0)]",
+            "name": "[concat(variables('gatewayName'), '-vpn-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2017-10-01",
             "location": "[resourceGroup().location]",
@@ -32,7 +31,7 @@
             "dependsOn": []
         },
         {
-            "condition": "[equals(parameters('singleVnetObject').isVPNGW, bool('true'))]",
+            "condition": "[greater(length(parameters('singleVnetObject').vpnConnections), 0)]",
             "name": "[concat(variables('gatewayName'), '-vpn')]",
             "type": "Microsoft.Network/virtualNetworkGateways",
             "apiVersion": "2017-10-01",
@@ -47,7 +46,7 @@
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('gatewaySubnetName'))]"
                             },
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('pipName'), '-vpn'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('gatewayName'), '-vpn-pip'))]"
                             }
                         },
                         "name": "[concat(variables('gatewayName'), '-vpn-ipconfig')]"
@@ -62,12 +61,13 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('pipName'), '-vpn')]"
+                "[concat(variables('gatewayName'), '-vpn-pip')]",
+                "[if(greater(length(parameters('singleVnetObject').erConnections), 0 ), concat(variables('gatewayName'), '-er'), '')]"
             ]
         },
         {
-            "condition": "[equals(parameters('singleVnetObject').isERGW, bool('true'))]",
-            "name": "[concat(variables('pipName'), '-er')]",
+            "condition": "[greater(length(parameters('singleVnetObject').erConnections), 0)]",
+            "name": "[concat(variables('gatewayName'), '-er-pip')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2017-10-01",
             "location": "[resourceGroup().location]",
@@ -79,7 +79,7 @@
             "dependsOn": []
         },
         {
-            "condition": "[equals(parameters('singleVnetObject').isERGW, bool('true'))]",
+            "condition": "[greater(length(parameters('singleVnetObject').erConnections), 0)]",
             "name": "[concat(variables('gatewayName'), '-er')]",
             "type": "Microsoft.Network/virtualNetworkGateways",
             "apiVersion": "2017-10-01",
@@ -94,7 +94,7 @@
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('gatewaySubnetName'))]"
                             },
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('pipName'), '-er'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('gatewayName'), '-er-pip'))]"
                             }
                         },
                         "name": "[concat(variables('gatewayName'), '-er-ipconfig')]"
@@ -110,7 +110,7 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('pipName'), '-er')]"
+                "[concat(variables('gatewayName'), '-er-pip')]"
             ]
         }
     ]
