@@ -7,7 +7,7 @@
         },
         "baseSettings": {
             "value": {
-                "env": "prd",
+                "env": "dev",
                 "baseUrl": "https://gppvchikqjpgctemplate01.blob.core.windows.net/templates/network/"
             }
         },
@@ -36,12 +36,7 @@
                                 ]
                             }
                         ],
-                        "erConnections": [
-                            {
-                                "circuit": "mainCircuit",
-                                "subscription": "prd"
-                            }
-                        ],
+                        "erConnections": [],
                         "addressPrefixes": [
                             "10.0.0.0/16"
                         ],

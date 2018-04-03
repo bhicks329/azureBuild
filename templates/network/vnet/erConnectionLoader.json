@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "type": "string"
+        },
+        "singleVnetObject": {
+            "type": "secureObject"
+        },
+        "env": {
+            "type": "string"
+        },
+        "sasToken": {
+            "type": "securestring"
+        }
+    },
+    "variables": {
+        "erResourceGroup": "[concat('rg-er-', parameters('env'), '-1')]",
+        "erConnectionDeployTemplate": "[concat(uri(deployment().properties.templateLink.uri, 'erConnectionDeploy.json'), parameters('sasToken'))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('lnk-erConnection-', parameters('vnetName'), '-', copyIndex())]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('erConnectionDeployTemplate')]"
+                },
+                "parameters": {
+                    "connectionName": {
+                        "value": "[concat('cn-', parameters('vnetName'), '-to-er-', parameters('env'), '-', parameters('singleVnetObject').erConnections[copyindex()].circuit)]"
+                    },
+                    "isDeployed": {
+                        "value": "[reference(resourceId(variables('erResourceGroup'), 'Microsoft.Network/expressRouteCircuits', concat('er-', parameters('env'), '-', parameters('singleVnetObject').erConnections[copyindex()].circuit)), '2018-01-01').serviceProviderProvisioningState]"
+                    },
+                    "peerID": {
+                        "value": "[resourceId(variables('erResourceGroup'), 'Microsoft.Network/expressRouteCircuits', concat('er-', parameters('env'), '-', parameters('singleVnetObject').erConnections[copyindex()].circuit))]"
+                    },
+                    "vpnGWId": {
+                        "value": "[resourceId('Microsoft.Network/virtualNetworkGateways', concat('vng-', parameters('vnetName'), '-er'))]"
+                    }
+                }
+            },
+            "copy": {
+                "name": "erConnectionCopy",
+                "count": "[length(parameters('singleVnetObject').erConnections)]",
+                "mode": "Parallel"
+            }
+        }
+    ]
+}

@@ -15,17 +15,21 @@
     "variables": {
         "nameDefaults": {
             "vnetBaseName": "[concat('vn-', parameters('basesettings').env,'-')]"
-        }
+        },
+        "vnetDeployTemplate": "[concat(parameters('baseSettings').baseUrl, 'vnet/vnetDeploy.json',  parameters('sasToken'))]",
+        "vnetPeerDeployTemplate": "[concat(parameters('baseSettings').baseUrl, 'vnet/vnetPeerDeploy.json',  parameters('sasToken'))]",
+        "erConnectionLoaderTemplate": "[concat(parameters('baseSettings').baseUrl, 'vnet/erConnectionLoader.json',  parameters('sasToken'))]",
+        "vpnConnectionDeployTemplate": "[concat(parameters('baseSettings').baseUrl, 'vnet/vpnConnectionDeploy.json',  parameters('sasToken'))]"
     },
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk-', variables('nameDefaults').vnetBaseName, parameters('networkObject').vNets[copyIndex()].name, '-', copyIndex())]",
+            "name": "[concat('lnk-vnetDeploy-', variables('nameDefaults').vnetBaseName, parameters('networkObject').vNets[copyIndex()].name)]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(parameters('baseSettings').baseUrl, 'vnet/vnetLoader.json',  parameters('sasToken'))]",
+                    "uri": "[variables('vnetDeployTemplate')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -37,6 +41,9 @@
                     },
                     "sasToken": {
                         "value": "[parameters('sasToken')]"
+                    },
+                    "env": {
+                        "value": "[parameters('baseSettings').env]"
                     }
                 }
             },
@@ -47,12 +54,12 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk-', variables('nameDefaults').vnetBaseName, parameters('networkObject').vNets[copyIndex()].name, '-peers-', copyIndex())]",
+            "name": "[concat('lnk-vnetPeer-', variables('nameDefaults').vnetBaseName, parameters('networkObject').vNets[copyIndex()].name, '-', copyIndex())]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(parameters('baseSettings').baseUrl, 'vnet/peerLoader.json',  parameters('sasToken'))]",
+                    "uri": "[variables('vnetPeerDeployTemplate')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -78,13 +85,13 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('lnk-', variables('nameDefaults').vnetBaseName, parameters('networkObject').vNets[copyIndex()].name, '-connection-', copyIndex())]",
+            "name": "[concat('lnk-vpnConnection-', variables('nameDefaults').vnetBaseName, parameters('networkObject').vNets[copyIndex()].name, '-', copyIndex())]",
             "type": "Microsoft.Resources/deployments",
             "condition": "[greater(length(parameters('networkObject').vNets[copyindex()].vpnConnections), 0)]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(parameters('baseSettings').baseUrl, 'vnet/deployVPN.json',  parameters('sasToken'))]"
+                    "uri": "[variables('vpnConnectionDeployTemplate')]"
                 },
                 "parameters": {
                     "singleVnetObject": {
@@ -97,6 +104,40 @@
             },
             "copy": {
                 "name": "ConnectionCopy",
+                "count": "[length(parameters('networkObject').vNets)]",
+                "mode": "Parallel"
+            },
+            "dependsOn": [
+                "lnkvnetCopy"
+            ]
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('lnk-erConnectionLoader-', variables('nameDefaults').vnetBaseName, parameters('networkObject').vNets[copyIndex()].name)]",
+            "type": "Microsoft.Resources/deployments",
+            "condition": "[greater(length(parameters('networkObject').vNets[copyindex()].erConnections), 0)]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('erConnectionLoaderTemplate')]"
+                },
+                "parameters": {
+                    "singleVnetObject": {
+                        "value": "[parameters('networkObject').vNets[copyindex()]]"
+                    },
+                    "vnetName": {
+                        "value": "[concat(variables('nameDefaults').vnetBaseName, parameters('networkObject').vNets[copyIndex()].name)]"
+                    },
+                    "env": {
+                        "value": "[parameters('baseSettings').env]"
+                    },
+                    "sasToken": {
+                        "value": "[parameters('sasToken')]"
+                    }
+                }
+            },
+            "copy": {
+                "name": "erConnectionCopy",
                 "count": "[length(parameters('networkObject').vNets)]",
                 "mode": "Parallel"
             },

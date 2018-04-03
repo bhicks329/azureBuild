@@ -11,6 +11,9 @@
         "gatewaySubnetName": {
             "defaultValue": "GatewaySubnet",
             "type": "string"
+        },
+        "env": {
+            "type": "string"
         }
     },
     "variables": {
