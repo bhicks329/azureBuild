@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "connectionName": {
+            "type": "string"
+        },
+        "isDeployed": {
+            "type": "string"
+        },
+        "peerID": {
+            "type": "string"
+        },
+        "vpnGWId": {
+            "type": "string"
+        },
+        "singleVnetObject": {
+            "type": "secureObject"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "apiVersion": "2018-01-01",
+            "condition": "[equals(parameters('isDeployed'), 'Succeeded')]",
+            "name": "[parameters('connectionName')]",
+            "type": "Microsoft.Network/connections",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "virtualNetworkGateway1": {
+                    "id": "[parameters('vpnGWId')]"
+                },
+                "peer": {
+                    "id": "[parameters('peerID')]"
+                },
+                "connectionType": "ExpressRoute",
+                "routingWeight": 10
+            }
+        }
+    ]
+}

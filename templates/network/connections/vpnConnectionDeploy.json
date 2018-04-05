@@ -13,24 +13,7 @@
     "resources": [
         {
             "apiVersion": "2018-01-01",
-            "type": "Microsoft.Network/localNetworkGateways",
-            "name": "[concat('lng-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName)]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "localNetworkAddressSpace": {
-                    "addressPrefixes": "[parameters('singleVnetObject').vpnConnections[copyindex()].addressPrefixes]"
-                },
-                "gatewayIpAddress": "[parameters('singleVnetObject').vpnConnections[copyindex()].peerAddress]"
-            },
-            "copy": {
-                "name": "localGWCopy",
-                "count": "[length(parameters('singleVnetObject').vpnConnections)]",
-                "mode": "Parallel"
-            }
-        },
-        {
-            "apiVersion": "2018-01-01",
-            "name": "[concat(parameters('vnetName'), '-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName)]",
+            "name": "[concat('cn-', parameters('vnetName'), '-lgw-', parameters('singleVnetObject').env, '-',parameters('singleVnetObject').vpnConnections[copyindex()].peerName)]",
             "type": "Microsoft.Network/connections",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -38,7 +21,7 @@
                     "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', concat('vng-', parameters('vnetName'), '-vpn'))]"
                 },
                 "localNetworkGateway2": {
-                    "id": "[resourceId('Microsoft.Network/localNetworkGateways', concat('lng-', parameters('singleVnetObject').vpnConnections[copyindex()].peerName))]"
+                    "id": "[resourceId('Microsoft.Network/localNetworkGateways', concat('lgw-', parameters('singleVnetObject').env, '-',parameters('singleVnetObject').vpnConnections[copyindex()].peerName))]"
                 },
                 "connectionType": "IPsec",
                 "routingWeight": 10,
@@ -49,7 +32,6 @@
                 "count": "[length(parameters('singleVnetObject').vpnConnections)]",
                 "mode": "Parallel"
             }
-
         }
     ]
 }

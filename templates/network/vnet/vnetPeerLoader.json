@@ -1,0 +1,59 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "singleVnetObject": {
+            "type": "secureObject"
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "sasToken": {
+            "type": "securestring"
+        }
+    },
+    "variables": {
+        "peerDeployTemplate": "[concat(uri(deployment().properties.templateLink.uri, 'vnetPeerDeploy.json'), parameters('sasToken'))]",
+        "workaround": {
+            "true": "[parameters('singleVnetObject').virtualNetworkPeerings]",
+            "false": [
+                {
+                    "name": "workaround",
+                    "properties": {}
+                }
+            ]
+        },
+        "peerings": "[variables('workaround')[string(greater(length(parameters('singleVnetObject').virtualNetworkPeerings), 0))]]",
+        "vnetRG": "[concat('rg-vn-', parameters('singleVnetObject').env, '-1')]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('lnk-peerDeploy-', parameters('vnetName'), '-', copyindex())]",
+            "condition": "[greater(length(parameters('singleVnetObject').virtualNetworkPeerings), 0)]",
+            "subscriptionId": "[parameters('singleVnetObject').subscriptionId]",
+            "resourceGroup": "[variables('vnetRG')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('peerDeployTemplate')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "singlePeerObject": {
+                        "value": "[parameters('singleVnetObject').virtualNetworkPeerings[copyindex()]]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    }
+                }
+            },
+            "copy": {
+                "name": "peerCopy",
+                "count": "[length(variables('peerings'))]",
+                "mode": "Serial"
+            }
+        }
+    ]
+}

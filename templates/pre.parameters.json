@@ -1,0 +1,61 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sasToken": {
+            "value": "?sv=2017-07-29&ss=b&srt=sco&sp=rl&se=2019-04-01T18:01:28Z&st=2018-03-01T00:00:28Z&spr=https&sig=zj1cnzlR35tEdFDTlXO8R5xYuh1M%2FQRaOCU%2FxPzyU1g%3D"
+        },
+        "baseSettings": {
+            "value": {
+                "env": "pre",
+                "baseUrl": "https://gppvchikqjpgctemplate01.blob.core.windows.net/templates/network/"
+            }
+        },
+        "networkObject": {
+            "value": {
+                "environments": {
+                    "prd": {
+                        "subscriptionId": "af75bef5-f2e8-474d-abea-ec0c5b8338c0"
+                    },
+                    "pre": {
+                        "subscriptionId": "6607418f-8f68-4746-9c9c-bd2219c9f296"
+                    }
+                },
+                "vNets": [
+                    {
+                        "name": "apps-1",
+                        "vpnConnections": [],
+                        "erConnections": [],
+                        "addressPrefixes": [
+                            "10.122.0.0/18",
+                            "10.122.64.0/18",
+                            "10.122.128.0/18",
+                            "10.122.192.0/18"
+                        ],
+                        "subnets": [
+                            {
+                                "name": "dmz-1",
+                                "addressPrefix": "10.122.4.0/24"
+                            },
+                            {
+                                "name": "frontend-1",
+                                "addressPrefix": "10.122.8.0/24"
+                            },
+                            {
+                                "name": "backend-1",
+                                "addressPrefix": "10.122.12.0/24"
+                            },
+                            {
+                                "name": "appgw-1",
+                                "addressPrefix": "10.122.16.0/24"
+                            }
+                        ],
+                        "virtualNetworkPeerings": [
+
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

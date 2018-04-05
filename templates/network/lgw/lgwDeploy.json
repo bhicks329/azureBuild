@@ -1,0 +1,29 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "singleVnetObject": {
+            "type": "secureObject"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "apiVersion": "2018-01-01",
+            "type": "Microsoft.Network/localNetworkGateways",
+            "name": "[concat('lgw-', parameters('singleVnetObject').env, '-' , parameters('singleVnetObject').vpnConnections[copyindex()].peerName)]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "localNetworkAddressSpace": {
+                    "addressPrefixes": "[parameters('singleVnetObject').vpnConnections[copyindex()].addressPrefixes]"
+                },
+                "gatewayIpAddress": "[parameters('singleVnetObject').vpnConnections[copyindex()].peerAddress]"
+            },
+            "copy": {
+                "name": "localGWCopy",
+                "count": "[length(parameters('singleVnetObject').vpnConnections)]",
+                "mode": "Parallel"
+            }
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "type": "string"
+        },
+        "singlePeerObject": {
+            "type": "object"
+        }
+        
+    },
+    "variables": {
+        "remoteVnetName": "[concat('vn-', parameters('singlePeerObject').remoteEnv, '-', parameters('singlePeerObject').remoteVnetName)]",
+        "remotePeerRG": "[concat('rg-', variables('remoteVnetName'))]" 
+    },   
+    "resources": [
+        {
+            "name": "[tolower(concat(parameters('vnetName'), '/', variables('remoteVnetName')))]", 
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "2018-01-01",
+            "properties": {
+                "allowForwardedTraffic": "[parameters('singlePeerObject').allowForwardedTraffic]",
+                "useRemoteGateways": "[parameters('singlePeerObject').useRemoteGateways]",
+                "allowGatewayTransit": "[parameters('singlePeerObject').allowGatewayTransit]",
+                "remoteVirtualNetwork": {
+                    "id": "[resourceid(parameters('singlePeerObject').remoteSubscriptionId, variables('remotePeerRG'), 'Microsoft.Network/virtualNetworks', variables('remoteVnetName'))]"
+                }
+            }
+        }
+    ]
+}
