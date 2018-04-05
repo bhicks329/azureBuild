@@ -16,7 +16,7 @@
     "variables": {
         "instance": [
             {
-                "name": "[toLower(if(equals(toLower(parameters('source').name), 'gatewaysubnet'), 'GatewaySubnet', concat(parameters('vnetName'), '-', parameters('source').name)))]",
+                "name": "[toLower(if(equals(toLower(parameters('source').name), 'gatewaysubnet'), 'GatewaySubnet', concat('sn-', parameters('vnetName'), '-', parameters('source').name)))]",
                 "properties": {
                     "addressPrefix": "[parameters('source').addressPrefix]"
                 }

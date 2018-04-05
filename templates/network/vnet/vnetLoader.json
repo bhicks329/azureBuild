@@ -1,0 +1,73 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "singleVnetObject": {
+            "type": "secureObject"
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "sasToken": {
+            "type": "securestring"
+        }
+    },
+    "variables": {
+        "vnetDeployTemplate": "[concat(uri(deployment().properties.templateLink.uri, 'vnetDeploy.json'), parameters('sasToken'))]",
+        "subnetCollectorTemplate": "[concat(uri(deployment().properties.templateLink.uri, 'subnetCollector.json'), parameters('sasToken'))]",
+        "subnetTransformTemplate": "[concat(uri(deployment().properties.templateLink.uri, 'subnetTransform.json'), parameters('sasToken'))]",
+        "vnetRG": "[concat('rg-', parameters('vnetName'))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('lnk-subnetCollector-', parameters('vnetName'))]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('subnetCollectorTemplate')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "source": {
+                        "value": "[parameters('singleVnetObject')]"
+                    },
+                    "transformTemplateUri": {
+                        "value": "[variables('subnetTransformTemplate')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('lnk-vnetDeploy-', parameters('vnetname'))]",
+            "type": "Microsoft.Resources/deployments",
+            "subscriptionId": "[parameters('singleVnetObject').subscriptionId]",
+            "resourceGroup": "[variables('vnetRG')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('vnetDeployTemplate')]"
+                },
+                "parameters": {
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "singleVnetObject": {
+                        "value": "[parameters('singleVnetObject')]"
+                    },
+                    "subnets": {
+                        "value": "[reference(concat('lnk-subnetCollector-', parameters('vnetName'))).outputs.result.value]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat('lnk-subnetCollector-', parameters('vnetName'))]"
+            ]
+        }
+    ]
+}

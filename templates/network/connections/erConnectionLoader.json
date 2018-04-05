@@ -41,6 +41,9 @@
                     },
                     "vpnGWId": {
                         "value": "[resourceId('Microsoft.Network/virtualNetworkGateways', concat('vng-', parameters('vnetName'), '-er'))]"
+                    },
+                    "singleVnetObject": {
+                        "value": "[parameters('singleVnetObject')]"
                     }
                 }
             },

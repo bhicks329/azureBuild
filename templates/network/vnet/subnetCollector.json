@@ -11,6 +11,9 @@
         },
         "source": {
             "type": "object"
+        },
+        "vnetName": {
+            "type": "string"
         }
     },
     "variables": {
@@ -20,7 +23,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
-            "name": "[concat('lnk-subnetTransform-', parameters('source').name, '-subnet-0')]",
+            "name": "[concat('lnk-subnetTransform-', parameters('vnetName'), '-subnet-0')]",
             "properties": {
                 "mode": "Incremental",
                 "parameters": {},
@@ -42,14 +45,14 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
-            "name": "[concat('lnk-subnetTransform-', parameters('source').name, '-subnet-', copyindex(1))]",
+            "name": "[concat('lnk-subnetTransform-', parameters('vnetName'), '-subnet-', copyindex(1))]",
             "copy": {
                 "name": "iterator",
                 "count": "[variables('count')]",
                 "mode": "serial"
             },
             "dependsOn": [
-                "[concat('lnk-subnetTransform-', parameters('source').name, '-subnet-0')]"
+                "[concat('lnk-subnetTransform-', parameters('vnetName'), '-subnet-0')]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -61,10 +64,10 @@
                         "value": "[parameters('source').subnets[copyindex()]]"
                     },
                     "state": {
-                        "value": "[reference(concat('lnk-subnetTransform-', parameters('source').name, '-subnet-', copyindex())).outputs.collection.value]"
+                        "value": "[reference(concat('lnk-subnetTransform-', parameters('vnetName'), '-subnet-', copyindex())).outputs.collection.value]"
                     },
                     "vnetName": {
-                        "value": "[parameters('source').name]"
+                        "value": "[parameters('vnetName')]"
                     }
                 }
             }
@@ -73,7 +76,7 @@
     "outputs": {
         "result": {
             "type": "array",
-            "value": "[reference(concat('lnk-subnetTransform-', parameters('source').name, '-subnet-', variables('count'))).outputs.collection.value]"
+            "value": "[reference(concat('lnk-subnetTransform-', parameters('vnetName'), '-subnet-', variables('count'))).outputs.collection.value]"
         }
     }
 }

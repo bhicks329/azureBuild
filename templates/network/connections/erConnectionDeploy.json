@@ -13,6 +13,9 @@
         },
         "vpnGWId": {
             "type": "string"
+        },
+        "singleVnetObject": {
+            "type": "secureObject"
         }
     },
     "variables": {},

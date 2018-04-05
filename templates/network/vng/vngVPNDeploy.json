@@ -1,0 +1,66 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "type": "string"
+        },
+        "singleVnetObject": {
+            "type": "secureObject"
+        },
+        "gatewaySubnetName": {
+            "defaultValue": "GatewaySubnet",
+            "type": "string"
+        }
+    },
+    "variables": {
+        "gatewayBaseName": "[concat('vng-', parameters('vnetName'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(variables('gatewayBaseName'), '-vpn-pip')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2018-01-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(variables('gatewayBaseName'), '-vpn')]",
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "apiVersion": "2018-01-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "id": "string",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('gatewaySubnetName'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('gatewayBaseName'), '-vpn-pip'))]"
+                            }
+                        },
+                        "name": "[concat(variables('gatewayBaseName'), '-vpn-ipconfig')]"
+                    }
+                ],
+                "gatewayType": "VPN",
+                "vpnType": "RouteBased",
+                "sku": {
+                    "name": "standard",
+                    "tier": "standard",
+                    "capacity": "2"
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('gatewayBaseName'), '-vpn-pip')]"
+            ]
+        }
+    ]
+}
